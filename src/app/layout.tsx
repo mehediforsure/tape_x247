@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import "./globals.css";
 import { Inter, IBM_Plex_Sans, IBM_Plex_Mono, Special_Elite } from "next/font/google";
+import { Analytics } from '@vercel/analytics/next';
 
 const display = Inter({
   subsets: ["latin"],
@@ -43,7 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Header />
           <main id="main-content">{children}</main>
           <Footer />
-
+          <Analytics />
       </body>
     </html>
   );
