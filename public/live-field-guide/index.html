@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f5f4ee">
+  <meta name="description" content="Get hands-on with Ableton Live 12 concepts. Original, interactive lessons on warping, envelopes, signal flow, and Session View.">
+  <title>Live Field Guide — Learn by listening</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%236049cf'/%3E%3Cpath d='M16 44V20h7v17h25v7zM29 20h7v11h-7zM42 20h7v11h-7z' fill='%23e3f49b'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#workspace">Skip to experiment</a>
+  <header class="site-header">
+    <a class="brand" href="#warp" aria-label="Live Field Guide home"><span class="brand-icon" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>LIVE <b>FIELD GUIDE</b><small>AN INDEPENDENT LEARNING SPACE</small></span></a>
+    <div class="header-actions"><span class="version">FOR LIVE 12</span><button id="search-open" class="search-button" aria-label="Find a concept"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="6.5"/><path d="m15 15 5 5"/></svg><span>Find a concept</span><kbd>/</kbd></button><button id="sound-toggle" class="icon-button" aria-label="Enable audio" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4zM17 8q5 4 0 8"/></svg><span id="sound-label">Sound off</span></button></div>
+  </header>
+  <main>
+    <section class="intro" aria-labelledby="intro-title"><div><div class="eyebrow"><span class="live-dot"></span> LESS READING. MORE DISCOVERY.</div><h1 id="intro-title">Understand it.<br>Then make it <em>yours.</em></h1></div><div class="intro-right"><p>A few things click when you try them.<br> Explore the ideas behind Live, one small<br class="desktop-break"> experiment at a time.</p><div class="intro-meta"><span>04 INTERACTIVE LABS</span><span>NO LIVE INSTALL NEEDED ↗</span></div></div><div class="hero-art" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></section>
+    <div class="guide-layout">
+      <aside class="sidebar" aria-label="Learning guide"><div class="sidebar-label">THE EXPLORER <span>01—04</span></div><nav id="lesson-nav" aria-label="Choose an experiment"></nav><div class="progress-box"><div><span>YOUR EXPLORATIONS</span><b id="progress-count">0 / 4</b></div><div class="progress-track"><span id="progress-fill"></span></div><p>Complete a small challenge in each lab.<br>Progress stays in this browser.</p></div><button id="reference-open" class="reference-button"><span>↗</span><span>The quick reference<small>A little help, when you need it.</small></span></button></aside>
+      <section id="workspace" class="workspace" tabindex="-1" aria-label="Interactive learning experiment"></section>
+    </div>
+    <section class="field-note"><span class="note-star" aria-hidden="true">✳</span><div><h2>Bring the experiment into your own Set.</h2><p>Each lab ends with a small thing to try in Live. Use your own sounds. Get it wrong. Listen again.</p></div><button id="sources-open">About this guide <span>↗</span></button></section>
+  </main>
+  <footer><span>LIVE FIELD GUIDE <span class="footer-divider">/</span> A project by Mehedi</span><span>Original lessons. Made for curious musicians.</span></footer>
+  <dialog id="reference-dialog"><div class="dialog-top"><div><span class="eyebrow">KEEP THE IDEAS CLOSE</span><h2>The quick reference.</h2></div><button class="close-button" aria-label="Close quick reference">×</button></div><label class="reference-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="6.5"/><path d="m15 15 5 5"/></svg><input id="reference-query" type="search" placeholder="Try “sustain”, “MIDI” or “quantization”…" aria-label="Search reference"></label><div id="reference-results"></div><p class="dialog-foot">Original notes, with links to the official Live 12 manual for the details.</p></dialog>
+  <dialog id="about-dialog"><div class="dialog-top"><div><span class="eyebrow">A SMALL, HANDS-ON START</span><h2>About the field guide.</h2></div><button class="close-button" aria-label="Close about this guide">×</button></div><div class="about-content"><p>This is an independent learning project by Mehedi, inspired by the concepts in the Ableton Live 12 User Manual. The explanations, graphics, and sounds here are original. This project is not affiliated with or endorsed by Ableton.</p><p>These are deliberately simplified teaching models. Browser-generated sounds illustrate timing, pitch, envelopes, and routing; they do not reproduce Live’s instruments or proprietary Warp algorithms. The Session lab uses a 4/4 clock with fixed 120 BPM and a shared one-bar loop.</p><h3>Go to the source</h3><div id="source-links"></div><p>Your challenge progress is saved locally in this browser. There are no uploads, external audio files, analytics, or accounts inside the app.</p><button id="reset-progress" class="button secondary">Reset learning progress</button><span id="reset-status" role="status"></span></div></dialog>
+  <div id="announcer" class="sr-only" role="status" aria-live="polite"></div>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
