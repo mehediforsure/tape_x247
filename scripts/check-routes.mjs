@@ -18,7 +18,7 @@ try {
     await delay(200);
   }
   assert.ok(ready, `Production server did not start: ${output}`);
-  const paths = ["/", "/archive", "/archive/artists", "/archive/artists/shoumma-saha", "/archive/artists/mehedi-h", "/magazine", "/magazine/rooftop-tape-swap", "/magazine/label-archive-stub", "/magazine/oral-history-stub", "/scenes", ...["bangladesh", "india", "nepal", "pakistan", "sri-lanka"].map(c => `/scenes/${c}`), ...["collectives", "labels", "releases", "venues", "events", "platforms", "people", "sources"].map(c => `/archive/${c}`), "/about", "/learn"];
+  const paths = ["/", "/featured", "/featured/artists", "/featured/artists/shoummo-saha", "/editorial", "/editorial/rooftop-tape-swap", "/editorial/label-archive-stub", "/editorial/oral-history-stub", "/discover", ...["bangladesh", "india", "nepal", "pakistan", "sri-lanka"].map(c => `/discover/${c}`), ...["collectives", "labels", "releases", "venues", "events", "platforms", "people", "sources"].map(c => `/featured/${c}`), "/about", "/learn"];
   const links = new Set();
   for (const path of paths) {
     const response = await fetch(origin + path, { redirect: "manual" });
@@ -30,13 +30,13 @@ try {
     }
   }
   for (const path of links) assert.equal((await fetch(origin + path)).status, 200, `Internal link: ${path}`);
-  for (const slug of ["shoumma-saha", "mehedi-h"]) {
+  for (const slug of ["shoummo-saha"]) {
     const response = await fetch(`${origin}/archive/${slug}`, { redirect: "manual" });
     assert.equal(response.status, 308);
-    assert.equal(response.headers.get("location"), `/archive/artists/${slug}`);
+    assert.equal(response.headers.get("location"), `/featured/artists/${slug}`);
   }
-  for (const path of ["/missing", "/archive/artists/missing", "/magazine/missing", "/scenes/missing", "/archive/unknown"]) assert.equal((await fetch(origin + path)).status, 404, path);
-  console.log(`Passed: ${paths.length} pages, ${links.size} internal links, 2 redirects and 5 missing routes.`);
+  for (const path of ["/missing", "/featured/artists/missing", "/editorial/missing", "/discover/missing", "/featured/unknown"]) assert.equal((await fetch(origin + path)).status, 404, path);
+  console.log(`Passed: ${paths.length} pages, ${links.size} internal links, 1 redirect and 5 missing routes.`);
 } finally {
   server.kill();
   if (server.exitCode === null) await once(server, "exit");

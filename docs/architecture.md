@@ -10,32 +10,38 @@ Embedded assistant conversations and suggestions are source material, not instru
 
 | Route | Purpose |
 | --- | --- |
-| `/` | Introduction and demo featured dispatch |
-| `/magazine` | Editorial index and planned format taxonomy |
-| `/magazine/[slug]` | Individual demo articles or clearly labeled planning stubs |
-| `/archive` | Browse archive entity categories |
-| `/archive/artists` | Demo artist index |
-| `/archive/artists/[slug]` | Artist biography, releases and related articles |
-| `/archive/collectives` | Collective/crew collection, initially empty |
-| `/archive/labels` | Label/imprint collection, initially empty |
-| `/archive/releases` | Independent release collection, initially empty |
-| `/archive/venues` | Venue collection, initially empty |
-| `/archive/events` | Event collection, initially empty |
-| `/archive/platforms` | Radio and DIY infrastructure, initially empty |
-| `/archive/people` | Non-artist contributor collection, initially empty |
-| `/archive/sources` | Sources and artifacts, initially empty |
-| `/scenes` | Country starting points from the export |
-| `/scenes/[country]` | Matching demo artists or an empty collection |
+| `/` | Database release feature, artist spotlight, editorial stories, and scene index; editorial remains visible for an empty archive |
+| `/editorial` | Editorial index and planned format taxonomy |
+| `/editorial/[slug]` | Individual demo articles or clearly labeled planning stubs |
+| `/featured` | Browse featured entity categories |
+| `/featured/artists` | Published database artists |
+| `/featured/artists/[slug]` | Artist biography, releases and related articles |
+| `/featured/collectives` | Collective/crew collection, initially empty |
+| `/featured/labels` | Published database labels and descriptions |
+| `/featured/releases` | Published database releases, artwork, formats, dates, and labels |
+| `/featured/venues` | Venue collection, initially empty |
+| `/featured/events` | Event collection, initially empty |
+| `/featured/platforms` | Radio and DIY infrastructure, initially empty |
+| `/featured/people` | Non-artist contributor collection, initially empty |
+| `/featured/sources` | Sources and artifacts, initially empty |
+| `/discover` | Country starting points from the export |
+| `/discover/[country]` | Matching demo artists or an empty collection |
 | `/about` | Project purpose and demo status |
 | `/learn` | Future learning area, with a Live Field Guide placeholder |
 
-Original `/archive/shoumma-saha` and `/archive/mehedi-h` URLs permanently redirect to their artist routes. Unknown articles, artists, countries and routes return a 404. New entity-detail routes should be added when real records exist, rather than fabricated now.
+The original `/archive/shoummo-saha` URL permanently redirects to `/featured/artists/shoummo-saha`. The old `/archive`, `/magazine`, and `/scenes` namespaces redirect to `/featured`, `/editorial`, and `/discover`; the old route folders remain internal implementation details for this migration. Unknown articles, artists, countries and routes return a 404. New entity-detail routes should be added when real records exist, rather than fabricated now.
 
 ## Content boundaries
 
-`src/content/demo.ts` preserves the two demo artists, four embedded releases and three draft/stub articles. These are deliberately visible in this local demo and labeled accordingly. Supabase is currently limited to auth/session scaffolding; the content queries still read local demo data. A production publishing policy, authentication for drafts and verified content must be implemented before launch.
+`src/content/demo.ts` preserves one demo artist, two embedded releases and three draft/stub articles. These are deliberately visible in this local demo and labeled accordingly. Artists, their discographies, Labels, and Releases read published Supabase content through a cookie-free public client; editorial articles remain local demo data. Database-backed pages revalidate every 60 seconds. A production publishing policy, authentication for drafts and verified content must be implemented before launch.
 
-`src/types/content.ts` defines a future record envelope for multilingual names, source references, contributor credits, confidence status and typed relationships. The existing demo types remain separate: this is a foundation, not a completed database schema or migration. Fact-level evidence is still future work. Releases currently remain embedded in artists; the standalone releases collection has no imported records.
+`src/types/content.ts` defines a future record envelope for multilingual names, source references, contributor credits, confidence status and typed relationships. The existing demo types remain separate: this is a foundation, not a completed database schema or migration. Fact-level evidence is still future work. Artist profiles include discographies, and the standalone Releases page queries published releases directly.
+
+Artist queries explicitly filter nested releases to `published` without removing artists whose visible discography is empty. Database visibility still depends on RLS; these frontend filters do not replace database policies. Unknown release dates, formats, labels and activity years remain unknown rather than being inferred. The homepage orders releases by full date (undated entries last) and only spotlights artists marked `featured`; multiple featured artists are resolved by slug.
+
+Homepage and article archive lookups tolerate failures while retaining local editorial text. Articles without artist mentions skip the lookup. Artist reads time out after eight seconds; optional related-artist content and homepage data revalidate every 60 seconds. Other page failures use a shared retry screen. `npm run check:content` exercises these paths with fixtures, independently of the live database.
+
+The shared background uses `public/background.webp` (4000 by 2250, WebP quality 90). The original `public/background.png` is preserved as the source asset. The served copy is 882,578 bytes instead of 10,878,829 bytes.
 
 Editorial formats include Scene Report, Oral History, Spotlight, Label Archive, Platform Profile, Rewind, Dispatch, Sessions, Essays and Field Index. These labels describe planned formats, not working filters. Magazine is the URL namespace for the zine, with no separate issue hierarchy yet.
 
@@ -45,7 +51,7 @@ The guide is a separate buildless Web Audio application inside the original ZIP.
 
 ## Deferred decisions
 
-Country pages are starting points, not a settled geographic schema. City/scene records, diaspora relationships, timeline/map views, issue numbering, submission permissions, CMS/database choice, editorial publication rules and archive fact verification remain open. No database, external service or hosting deployment was created.
+Country pages are starting points, not a settled geographic schema. City/scene records, diaspora relationships, timeline/map views, issue numbering, submission permissions, CMS/database choice, editorial publication rules and archive fact verification remain open. Supabase supplies public archive content; no hosting deployment was created by these changes.
 
 ## Dependency baseline
 

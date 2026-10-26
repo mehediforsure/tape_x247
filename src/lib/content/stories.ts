@@ -11,7 +11,7 @@ export function kickerFor(d: Dispatch): string {
 
 export function toStory(d: Dispatch): Story {
   return {
-    href: `/magazine/${d.slug}`,
+    href: `/editorial/${d.slug}`,
     kicker: kickerFor(d),
     date: d.filed === "Not filed" ? undefined : d.filed,
     title: d.title,

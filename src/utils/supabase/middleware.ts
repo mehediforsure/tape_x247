@@ -1,43 +1,44 @@
 import { createServerClient } from "@supabase/ssr";
-import { type NextRequest, NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
+import { isSupabaseConfigured, getSupabaseEnv } from "./env";
 
+/**
+ * Refreshes the Supabase auth session cookie.
+ *
+ * Designed so that it can NEVER take the whole site down:
+ *  - it is a no-op unless SUPABASE_AUTH_ENABLED=true (as in .env.example)
+ *  - it is a no-op if the Supabase env vars are missing
+ *  - any Supabase error is logged and the request continues
+ */
 export async function updateSession(request: NextRequest) {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+  let response = NextResponse.next({ request });
 
-  // Auth/session refresh is opt-in until the application has authenticated routes.
-  if (process.env.SUPABASE_AUTH_ENABLED !== "true" || !supabaseUrl || !supabaseKey) {
-    return NextResponse.next();
+  if (process.env.SUPABASE_AUTH_ENABLED !== "true" || !isSupabaseConfigured()) {
+    return response;
   }
 
-  let supabaseResponse = NextResponse.next({
-    request: {
-      headers: request.headers,
-    },
-  });
-
-  const supabase = createServerClient(
-    supabaseUrl,
-    supabaseKey,
-    {
+  try {
+    const { url, key } = getSupabaseEnv();
+    const supabase = createServerClient(url, key, {
       cookies: {
         getAll() {
           return request.cookies.getAll();
         },
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
-          supabaseResponse = NextResponse.next({
-            request,
-          });
+          response = NextResponse.next({ request });
           cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options),
+            response.cookies.set(name, value, options),
           );
         },
       },
-    },
-  );
+    });
 
-  await supabase.auth.getClaims();
+    // Validates the JWT with the Auth server and refreshes it if needed.
+    await supabase.auth.getUser();
+  } catch (error) {
+    console.error("[supabase middleware] session refresh failed:", error);
+  }
 
-  return supabaseResponse;
+  return response;
 }

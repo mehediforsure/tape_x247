@@ -1,8 +1,11 @@
 node_modules/
 .next/
+.next-dev/
 out/
 *.tsbuildinfo
 .env*
 !.env.example
 next-env.d.ts
 *.log
+*.bak
+*.bak-*

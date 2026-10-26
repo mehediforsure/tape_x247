@@ -3,9 +3,9 @@ import type { Artist, Dispatch } from "@/types/demo";
 
 export const artists: Artist[] = [
   {
-    slug: "shoumma-saha",
+    slug: "shoummo-saha",
     code: "TX-0001",
-    name: "Shoumma Saha",
+    name: "Shoummo Saha",
     location: "Dhaka, Bangladesh",
     active: "Placeholder: 2019 to present",
     tags: ["ambient", "field recording", "modular"],
@@ -30,34 +30,6 @@ export const artists: Artist[] = [
       },
     ],
   },
-  {
-    slug: "mehedi-h",
-    code: "TX-0002",
-    name: "Mehedi H.",
-    location: "Dhaka, Bangladesh",
-    active: "Placeholder: 2020 to present",
-    tags: ["experimental", "bass", "glitch"],
-    summary: "Broken-up club rhythms and low-end pressure, mixed on a budget.",
-    bio: "Dhaka-based producer and audio engineer working in glitch, bass music and club-leaning experimental. Tracks lean on chopped vocals, heavy sub frequencies and deliberately crunchy low-bitrate textures.",
-    provenance: "placeholder",
-    releases: [
-      {
-        title: "Bitrate Prayer",
-        year: 2023,
-        format: "CD-R",
-        label: "Placeholder Tapes",
-        sideA: ["128 kbps", "Buffer", "Artifact Choir"],
-        sideB: ["Packet Loss", "Sub Offering"],
-      },
-      {
-        title: "Load Shedding Riddim",
-        year: 2024,
-        format: "Digital",
-        label: "Self-released",
-        sideA: ["Generator Dub", "Candle Mode", "Power Returns"],
-      },
-    ],
-  },
 ];
 
 export const dispatches: Dispatch[] = [
@@ -74,7 +46,7 @@ export const dispatches: Dispatch[] = [
       "Between sets the talk turned to formats. Cassettes are cheap to duplicate and forgiving of bad masters, which suits people who mix on laptop speakers and master at home. CD-Rs travel well in a backpack. Links die; a tape on a shelf does not.",
       "Near the end, a producer pressed a hand-labeled tape into a stranger’s palm and said only that side B was the better side. That small exchange is the kind of thing an archive should be built to hold on to.",
     ],
-    mentions: ["shoumma-saha", "mehedi-h"],
+    mentions: ["shoummo-saha"],
     status: "draft",
   },
   {

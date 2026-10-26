@@ -1,74 +1,67 @@
 import Link from "next/link";
-import { LeadStory, SideStory, FeedRow, type Story } from "@/components/Stories";
+import CoverArt from "@/components/CoverArt";
+import type { Story } from "@/components/Stories";
 
 export type Scene = { name: string; slug: string; count?: number };
+export type ReleaseCard = { slug: string; artistSlug: string; coverUrl?: string; artist: string; city: string; title: string; year: number | null; format: string | null };
+export type ArtistSpotlight = { slug: string; name: string; location: string; imageUrl?: string; summary: string };
 
-export default function HomeView({
-  lead,
-  side,
-  latest,
-  scenes,
-}: {
-  lead: Story;
-  side: Story[];
-  latest: Story[];
-  scenes: Scene[];
-}) {
+function StoryRow({ story }: { story: Story }) {
   return (
-    <div className="wrap py-10">
-      <section
-        aria-label="Top stories"
-        className="grid gap-10 lg:grid-cols-[7fr_5fr] lg:gap-12"
-      >
-        <LeadStory s={lead} />
-        {side.length > 0 && (
-          <div>
-            <h2 className="kicker mb-4">More stories</h2>
-            {side.map((s) => (
-              <SideStory key={s.href} s={s} />
-            ))}
-          </div>
-        )}
+    <li className="rule-t last:border-b">
+      <Link href={story.href} className="grid gap-2 py-5 no-underline hover:no-underline md:grid-cols-[10rem_1fr_auto] md:items-baseline md:gap-6">
+        <p className="kicker">{story.kicker}{story.status ? ` · ${story.status}` : ""}</p>
+        <h3 className="font-display text-xl font-semibold leading-tight tracking-tight decoration-1 underline-offset-4 hover:underline">{story.title}</h3>
+        <p className="text-sm text-muted md:text-right">{story.date ?? "Read the record"}</p>
+      </Link>
+    </li>
+  );
+}
+
+export default function HomeView({ lead, side, scenes, releases, spotlight, archiveUnavailable = false }: {
+  lead?: Story;
+  side: Story[];
+  scenes: Scene[];
+  releases: ReleaseCard[];
+  spotlight?: ArtistSpotlight;
+  archiveUnavailable?: boolean;
+}) {
+  const stories = lead ? [lead, ...side] : side;
+  const featuredRelease = releases[0];
+
+  return (
+    <div className="wrap py-12 sm:py-16">
+      {featuredRelease ? <section aria-labelledby="start-here" className="grid gap-8 lg:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.65fr)] lg:gap-14">
+        <div>
+          <p className="kicker">Start here</p>
+          <CoverArt seed={featuredRelease.slug} imageSrc={featuredRelease.coverUrl} className="mt-4 aspect-[4/3] w-full" />
+        </div>
+        <div className="flex flex-col justify-end pb-1">
+          <p className="kicker">{["Release", featuredRelease.format, featuredRelease.year].filter(Boolean).join(" · ")}</p>
+          <h1 id="start-here" className="headline-xl mt-3">{featuredRelease.title}</h1>
+          <p className="mt-4 max-w-prose text-lg text-muted">{featuredRelease.artist} · {featuredRelease.city}</p>
+          <div className="mt-8 border-y border-rule py-4 text-sm text-muted"><div className="flex items-center justify-between gap-4"><span>Audio preview</span><span>Embed slot · coming soon</span></div></div>
+          <Link href={`/featured/artists/${featuredRelease.artistSlug}`} className="btn mt-6 w-fit">Explore the artist →</Link>
+        </div>
+      </section> : <section><h1 className="headline-xl">A zine. A living archive.</h1><p className="mt-4 text-muted">{archiveUnavailable ? "Archive records are temporarily unavailable. Explore the stories below and try again shortly." : "No published releases yet. Explore the stories and scenes below."}</p></section>}
+
+      <section aria-labelledby="new-on-tape" className="mt-24 sm:mt-32">
+        <div className="mb-6 flex items-baseline justify-between gap-4"><h2 id="new-on-tape" className="headline-md">New on tape_x247</h2><Link href="/featured/releases" className="kicker no-underline hover:underline">See all →</Link></div>
+        <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-4 sm:gap-6">
+          {releases.map((release) => <article key={release.slug}><CoverArt seed={release.slug} imageSrc={release.coverUrl} className="aspect-square w-full" /><div className="mt-3 space-y-1"><p className="kicker">● {release.artist} · {release.city}</p><h3 className="font-display text-lg font-semibold leading-tight tracking-tight">{release.title}</h3><p className="text-sm text-muted">{[release.format, release.year].filter(Boolean).join(" · ") || "Release details not documented"}</p></div></article>)}
+        </div>
       </section>
 
-      {latest.length > 0 && (
-        <section aria-label="Latest" className="mt-16">
-          <div className="mb-4 flex items-baseline justify-between">
-            <h2 className="headline-md">Latest</h2>
-            <Link href="/magazine" className="kicker">
-              See all →
-            </Link>
-          </div>
-          <ul className="border-b border-rule">
-            {latest.map((s) => (
-              <FeedRow key={s.href} s={s} />
-            ))}
-          </ul>
-        </section>
-      )}
+      {spotlight ? <section aria-labelledby="artist-spotlight" className="mt-24 border-t border-rule pt-10 sm:mt-32 sm:pt-12">
+        <p className="kicker">Artist spotlight</p>
+        <div className="mt-5 grid gap-8 md:grid-cols-[14rem_1fr] md:items-start md:gap-10"><CoverArt seed={spotlight.slug} imageSrc={spotlight.imageUrl} className="aspect-square w-full" /><div><h2 id="artist-spotlight" className="headline-md text-3xl">{spotlight.name}</h2><p className="mt-2 kicker">{spotlight.location}</p><p className="mt-5 max-w-prose text-lg leading-relaxed text-muted">{spotlight.summary}</p><Link href={`/featured/artists/${spotlight.slug}`} className="mt-6 inline-block text-sm">Read the profile →</Link></div></div>
+      </section> : null}
 
-      <section aria-label="Scenes" className="mt-16">
-        <h2 className="headline-md mb-4">Scenes</h2>
-        <ul className="border-b border-rule">
-          {scenes.map((c) => (
-            <li key={c.slug} className="rule-t">
-              <Link
-                href={`/scenes/${c.slug}`}
-                className="flex items-baseline justify-between py-3 no-underline hover:no-underline"
-              >
-                <span className="font-display text-3xl font-bold tracking-tight decoration-1 underline-offset-4 hover:underline sm:text-5xl">
-                  {c.name}
-                </span>
-                {typeof c.count === "number" && (
-                  <span className="kicker">
-                    {String(c.count).padStart(2, "0")} records
-                  </span>
-                )}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
+      <section aria-labelledby="stories" className="mt-24 sm:mt-32"><div className="mb-4 flex items-baseline justify-between gap-4"><h2 id="stories" className="headline-md">Stories</h2><Link href="/editorial" className="kicker no-underline hover:underline">All editorial →</Link></div><ul>{stories.map((story) => <StoryRow key={story.href} story={story} />)}</ul></section>
+
+      <section aria-labelledby="discover" className="mt-24 sm:mt-32"><h2 id="discover" className="headline-md mb-5">Discover</h2><ul className="border-b border-rule">{scenes.map((scene) => <li key={scene.slug} className="rule-t"><Link href={`/discover/${scene.slug}`} className="flex items-baseline justify-between gap-4 py-4 no-underline hover:no-underline sm:py-5"><span className="font-display text-3xl font-bold tracking-tight decoration-1 underline-offset-4 hover:underline sm:text-5xl">{scene.name}</span>{typeof scene.count === "number" && <span className="kicker shrink-0">{String(scene.count).padStart(2, "0")} records</span>}</Link></li>)}</ul></section>
+
+      <section aria-labelledby="contribute" className="mt-24 border-t border-rule pt-10 sm:mt-32 sm:pt-12"><p className="kicker">Keep the archive alive</p><div className="mt-4 flex flex-col justify-between gap-6 md:flex-row md:items-end"><div><h2 id="contribute" className="headline-md text-3xl">Know something we missed?</h2><p className="mt-3 max-w-prose text-muted">Tell us about an artist, label, space, release or tape worth keeping in the record.</p></div><a href="mailto:info@tape_x247.com?subject=Submission%20for%20tape_x247" className="btn w-fit">Submit a lead →</a></div></section>
     </div>
   );
 }

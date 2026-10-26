@@ -6,7 +6,7 @@ export default function CategoryPage({ category }: { category: EntityType }) {
   const item = archiveCategories.find(c => c.slug === category)!;
   return (
     <div className="wrap py-10">
-      <Link href="/archive" className="kicker">← Archive</Link>
+      <Link href="/featured" className="kicker">← Featured</Link>
       <h1 className="page-title mt-6">{item.title}</h1>
       <p className="mt-4 max-w-prose text-lg text-muted">{item.description}</p>
       <div className="rule-t rule-b mt-10 py-8">

@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "check:routes": "node scripts/check-routes.mjs"
+    "check:routes": "node scripts/check-routes.mjs",
+    "check:content": "node --test scripts/check-content.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

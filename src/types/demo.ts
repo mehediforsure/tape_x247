@@ -2,24 +2,32 @@ import type { Provenance } from "@/types/content";
 export type { Provenance } from "@/types/content";
 
 export type Release = {
+  id?: string;
+  slug?: string;
   title: string;
-  year: number;
-  format: "Cassette" | "CD-R" | "Digital";
-  label: string;
+  releaseDate?: string | null;
+  year: number | null;
+  format: string | null;
+  label: string | null;
   sideA: string[];
   sideB?: string[];
+  extraSides?: { side: string; tracks: string[] }[]; // sides beyond A/B (e.g. C, D on a double LP)
+  coverUrl?: string;
 };
 
 export type Artist = {
   slug: string;
-  code: string; // catalogue number
+  code?: string; // catalogue number, when documented
   name: string;
   location: string;
-  active: string;
+  country?: string; // country name from the database, used for scene/country pages
+  active: string | null;
+  featured?: boolean;
   tags: string[];
   summary: string;
   bio: string;
   provenance: Provenance;
+  imageUrl?: string;
   releases: Release[];
 };
 

@@ -27,11 +27,11 @@ function Kicker({ s }: { s: Story }) {
   );
 }
 
-export function LeadStory({ s }: { s: Story }) {
+export function LeadStory({ s, imageSrc }: { s: Story; imageSrc?: string }) {
   return (
     <article>
       <Link href={s.href} className="block no-underline hover:no-underline">
-        <CoverArt seed={s.seed} label={s.kicker} className="aspect-[4/3] w-full" />
+        <CoverArt seed={s.seed} label={s.kicker} imageSrc={imageSrc} className="aspect-[4/3] w-full" />
         <div className="mt-4 space-y-3">
           <Kicker s={s} />
           <h1 className="headline-xl hover:underline decoration-1 underline-offset-4">

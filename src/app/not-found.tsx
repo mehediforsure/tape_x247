@@ -6,7 +6,7 @@ export default function NotFound() {
       <p className="kicker">404</p>
       <h1 className="page-title mt-2">Record not found.</h1>
       <p className="mt-6">
-        <Link href="/archive">Explore the archive</Link>
+        <Link href="/featured">Explore featured records</Link>
       </p>
     </div>
   );

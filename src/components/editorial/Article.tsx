@@ -3,16 +3,25 @@ import CoverArt from "@/components/CoverArt";
 import { SideStory } from "@/components/Stories";
 import { getArtists, getArticles } from "@/lib/content/queries";
 import { kickerFor, toStory } from "@/lib/content/stories";
-import type { Dispatch } from "@/types/demo";
+import type { Artist, Dispatch } from "@/types/demo";
 
-export default function Article({ lead }: { lead: Dispatch }) {
+export default async function Article({ lead }: { lead: Dispatch }) {
   const rest = getArticles().filter(d => d.slug !== lead.slug).map(toStory);
-  const mentioned = getArtists().filter(a => lead.mentions.includes(a.slug));
+  let mentioned: Artist[] = [];
+  let archiveUnavailable = false;
+  if (lead.mentions.length > 0) {
+    try {
+      mentioned = (await getArtists()).filter(a => lead.mentions.includes(a.slug));
+    } catch (error) {
+      console.error("[article] Related artists are unavailable:", error);
+      archiveUnavailable = true;
+    }
+  }
   const kicker = kickerFor(lead);
 
   return (
     <article className="wrap py-10">
-      <Link href="/magazine" className="kicker">← Magazine</Link>
+      <Link href="/editorial" className="kicker">← Editorial</Link>
 
       <header className="mt-6 max-w-4xl space-y-4">
         <p className="kicker">
@@ -43,13 +52,14 @@ export default function Article({ lead }: { lead: Dispatch }) {
         </div>
 
         <aside className="space-y-10">
+          {archiveUnavailable && <p className="text-sm text-muted">Related artist records are temporarily unavailable.</p>}
           {mentioned.length > 0 && (
             <section>
               <h2 className="kicker mb-3">In this piece</h2>
               <ul className="border-b border-rule">
                 {mentioned.map((a) => (
                   <li key={a.slug} className="rule-t py-3">
-                    <Link href={`/archive/artists/${a.slug}`}>{a.name}</Link>
+                    <Link href={`/featured/artists/${a.slug}`}>{a.name}</Link>
                     <span className="mt-1 block text-sm text-muted">{a.summary}</span>
                   </li>
                 ))}
