@@ -31,24 +31,26 @@ export default function HomeView({ lead, side, scenes, releases, spotlight, arch
 
   return (
     <div className="wrap py-12 sm:py-16">
-      {featuredRelease ? <section aria-labelledby="start-here" className="grid gap-8 lg:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.65fr)] lg:gap-14">
+      {featuredRelease ? <section aria-labelledby="start-here" className="grid gap-8 lg:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.65fr)] lg:gap-8">
         <div>
-          <p className="kicker">Start here</p>
-          <CoverArt seed={featuredRelease.slug} imageSrc={featuredRelease.coverUrl} className="mt-4 aspect-[4/3] w-full" />
+          <p className="kicker text-base">Start here</p>
+          <Link href={`/featured/artists/${featuredRelease.artistSlug}`} aria-label={`View ${featuredRelease.title} release in the artist discography`} className="block w-[85%]">
+            <CoverArt seed={featuredRelease.slug} imageSrc={featuredRelease.coverUrl} className="mt-4 aspect-[4/3] w-full" />
+          </Link>
         </div>
         <div className="flex flex-col justify-end pb-1">
           <p className="kicker">{["Release", featuredRelease.format, featuredRelease.year].filter(Boolean).join(" · ")}</p>
           <h1 id="start-here" className="headline-xl mt-3">{featuredRelease.title}</h1>
           <p className="mt-4 max-w-prose text-lg text-muted">{featuredRelease.artist} · {featuredRelease.city}</p>
           <div className="mt-8 border-y border-rule py-4 text-sm text-muted"><div className="flex items-center justify-between gap-4"><span>Audio preview</span><span>Embed slot · coming soon</span></div></div>
-          <Link href={`/featured/artists/${featuredRelease.artistSlug}`} className="btn mt-6 w-fit">Explore the artist →</Link>
+          <Link href="/featured/artists" className="btn mt-6 w-fit">Explore more artists →</Link>
         </div>
       </section> : <section><h1 className="headline-xl">A zine. A living archive.</h1><p className="mt-4 text-muted">{archiveUnavailable ? "Archive records are temporarily unavailable. Explore the stories below and try again shortly." : "No published releases yet. Explore the stories and scenes below."}</p></section>}
 
       <section aria-labelledby="new-on-tape" className="mt-24 sm:mt-32">
         <div className="mb-6 flex items-baseline justify-between gap-4"><h2 id="new-on-tape" className="headline-md">New on tape_x247</h2><Link href="/featured/releases" className="kicker no-underline hover:underline">See all →</Link></div>
-        <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-4 sm:gap-6">
-          {releases.map((release) => <article key={release.slug}><CoverArt seed={release.slug} imageSrc={release.coverUrl} className="aspect-square w-full" /><div className="mt-3 space-y-1"><p className="kicker">● {release.artist} · {release.city}</p><h3 className="font-display text-lg font-semibold leading-tight tracking-tight">{release.title}</h3><p className="text-sm text-muted">{[release.format, release.year].filter(Boolean).join(" · ") || "Release details not documented"}</p></div></article>)}
+        <div className="grid grid-cols-5 gap-2 sm:gap-3">
+          {releases.slice(0, 5).map((release) => <article key={release.slug} className="min-w-0"><CoverArt seed={release.slug} imageSrc={release.coverUrl} className="aspect-square w-full" /><div className="mt-2 space-y-0.5"><p className="kicker truncate text-[9px]">● {release.artist} · {release.city}</p><h3 className="line-clamp-2 font-display text-[11px] font-semibold leading-tight tracking-tight sm:text-xs">{release.title}</h3><p className="truncate text-[10px] text-muted">{[release.format, release.year].filter(Boolean).join(" · ") || "Release details not documented"}</p></div></article>)}
         </div>
       </section>
 
@@ -57,7 +59,7 @@ export default function HomeView({ lead, side, scenes, releases, spotlight, arch
         <div className="mt-5 grid gap-8 md:grid-cols-[14rem_1fr] md:items-start md:gap-10"><CoverArt seed={spotlight.slug} imageSrc={spotlight.imageUrl} className="aspect-square w-full" /><div><h2 id="artist-spotlight" className="headline-md text-3xl">{spotlight.name}</h2><p className="mt-2 kicker">{spotlight.location}</p><p className="mt-5 max-w-prose text-lg leading-relaxed text-muted">{spotlight.summary}</p><Link href={`/featured/artists/${spotlight.slug}`} className="mt-6 inline-block text-sm">Read the profile →</Link></div></div>
       </section> : null}
 
-      <section aria-labelledby="stories" className="mt-24 sm:mt-32"><div className="mb-4 flex items-baseline justify-between gap-4"><h2 id="stories" className="headline-md">Stories</h2><Link href="/editorial" className="kicker no-underline hover:underline">All editorial →</Link></div><ul>{stories.map((story) => <StoryRow key={story.href} story={story} />)}</ul></section>
+      <section aria-labelledby="editorials" className="mt-24 sm:mt-32"><div className="mb-4 flex items-baseline justify-between gap-4"><h2 id="editorials" className="headline-md">Editorials</h2><Link href="/editorial" className="kicker no-underline hover:underline">All editorial →</Link></div><ul>{stories.map((story) => <StoryRow key={story.href} story={story} />)}</ul></section>
 
       <section aria-labelledby="discover" className="mt-24 sm:mt-32"><h2 id="discover" className="headline-md mb-5">Discover</h2><ul className="border-b border-rule">{scenes.map((scene) => <li key={scene.slug} className="rule-t"><Link href={`/discover/${scene.slug}`} className="flex items-baseline justify-between gap-4 py-4 no-underline hover:no-underline sm:py-5"><span className="font-display text-3xl font-bold tracking-tight decoration-1 underline-offset-4 hover:underline sm:text-5xl">{scene.name}</span>{typeof scene.count === "number" && <span className="kicker shrink-0">{String(scene.count).padStart(2, "0")} records</span>}</Link></li>)}</ul></section>
 

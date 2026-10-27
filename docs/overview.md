@@ -55,6 +55,5 @@ Upcoming:
 - [Discogs](https://www.discogs.com/) — Music metadata and archival structure.
 - https://buy.ambientweets.com/ -
 - https://musicforthought.com/artist-reviews/aus-everis-what-survives
-- 
 
 

@@ -30,6 +30,9 @@ export const metadata: Metadata = {
   title: "tape_x247",
   description:
     "A zine and living archive for underground electronic music across South Asia.",
+  icons: {
+    icon: "/logos-fonts/main logo.png",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -11,7 +11,7 @@ function updateSoundButton(){const on=audio.context&&!audio.muted;$('#sound-togg
 async function enableSound(){try{await audio.enable();audioError='';updateSoundButton();return true;}catch(error){audioError=error.message;announce(audioError);const area=$('#audio-message');if(area){area.textContent=audioError;area.classList.remove('hidden');}return false;}}
 $('#sound-toggle').addEventListener('click',async()=>{if(audio.context&&!audio.muted){audio.setMuted(true);updateSoundButton();}else await enableSound();});
 function updateProgress(){
- $('#progress-count').textContent=`${complete.size} / 4`;$('#progress-fill').style.width=`${complete.size*25}%`;
+ const progressCount=$('#progress-count'),progressFill=$('#progress-fill');if(progressCount)progressCount.textContent=`${complete.size} / 4`;if(progressFill)progressFill.style.width=`${complete.size*25}%`;
  $('#lesson-nav').innerHTML=lessons.map((l,i)=>`<a class="lesson-link ${state.id===l.id?'active':''}" href="#${l.id}" ${state.id===l.id?'aria-current="page"':''}><span class="nav-number">0${i+1}</span><span class="nav-text">${l.title}<small>${l.sub}</small></span><span class="nav-check" aria-label="${complete.has(l.id)?'Challenge complete':''}">${complete.has(l.id)?'✓':''}</span></a>`).join('');
  const badge=$('#challenge-state');if(badge){badge.textContent=complete.has(state.id)?'✓ Explored':'Give it a try';badge.classList.toggle('complete',complete.has(state.id));}
 }
@@ -138,3 +138,36 @@ $('#reset-progress').onclick=()=>{complete.clear();try{localStorage.removeItem('
 function suspendPlayback(){if(state.warp.playing||state.flow.playing||state.session.playing)render();audio.stopAll();}
 document.addEventListener('visibilitychange',()=>{if(document.hidden)suspendPlayback();});window.addEventListener('pagehide',()=>{cleanup();audio.stopAll();});
 function frame(){animate();requestAnimationFrame(frame);}render();requestAnimationFrame(frame);
+const introRight=document.querySelector('.intro-right');
+const introCopy=document.querySelector('.intro > div:first-child');
+if(introRight&&introCopy){introRight.querySelector('p').textContent='There are things that only click when you try them. Try this. Explore the ideas behind Electronic Music Production.';introCopy.append(introRight);}
+const removeSelectedGuideElements=()=>document.querySelectorAll('.intro > div:first-child > .eyebrow,.intro-meta span,.lab-heading .eyebrow,.lab-chip,.sidebar-label,footer > span:not(.brand-icon)').forEach(element=>element.remove());
+removeSelectedGuideElements();
+new MutationObserver(removeSelectedGuideElements).observe(document.body,{childList:true,subtree:true});
+const brand=document.querySelector('.brand');
+const brandText=brand?.querySelector(':scope > span:not(.brand-icon)');
+const brandIcon=brand?.querySelector(':scope > .brand-icon');
+const footer=document.querySelector('footer');
+brandText?.remove();
+if(brandIcon&&footer)footer.append(brandIcon);
+const moveFooterContent=()=>{const footer=document.querySelector('footer');if(!footer)return;document.querySelectorAll('.challenge,.try-live').forEach(element=>{if(element.parentElement!==footer)footer.append(element);});};
+moveFooterContent();
+new MutationObserver(moveFooterContent).observe(document.body,{childList:true,subtree:true});
+const moveSidebarTools=()=>{const sidebar=document.querySelector('.sidebar'),heading=document.querySelector('.lab-heading');if(!sidebar||!heading)return;const progress=sidebar.querySelector('.progress-box');if(progress&&progress.parentElement!==heading)heading.append(progress);};
+moveSidebarTools();
+new MutationObserver(moveSidebarTools).observe(document.body,{childList:true,subtree:true});
+const removeChallengeFeature=()=>document.querySelectorAll('.challenge,#challenge-state').forEach(element=>element.remove());
+const moveSourcesToFooter=()=>{const footer=document.querySelector('footer'),sources=document.querySelector('#sources-open');if(footer&&sources&&sources.parentElement!==footer)footer.append(sources);};
+removeChallengeFeature();
+moveSourcesToFooter();
+new MutationObserver(()=>{removeChallengeFeature();moveSourcesToFooter();}).observe(document.body,{childList:true,subtree:true});
+const relocateInsightAndManual=()=>{const toolbar=document.querySelector('.experiment-toolbar'),insightText=document.querySelector('#insight-text'),insightIcon=document.querySelector('.insight-icon');if(toolbar&&insightText&&!toolbar.contains(insightText)){const insight=insightText.closest('.insight');toolbar.append(insightIcon,insightText);if(insight&&!insight.childElementCount)insight.remove();}const footer=document.querySelector('footer'),manual=document.querySelector('footer>.try-live>.manual-link'),sources=document.querySelector('#sources-open');if(footer&&manual&&manual.parentElement!==footer){footer.append(manual);if(sources)footer.insertBefore(manual,sources.nextSibling);}};
+relocateInsightAndManual();
+new MutationObserver(relocateInsightAndManual).observe(document.body,{childList:true,subtree:true});
+const removeManualAndBrand=()=>document.querySelectorAll('a.manual-link,footer>.brand-icon').forEach(element=>element.remove());
+removeManualAndBrand();
+new MutationObserver(removeManualAndBrand).observe(document.body,{childList:true,subtree:true});
+const moveFieldNoteBelowIntro=()=>{const main=document.querySelector('main'),intro=main?.querySelector('.intro'),note=main?.querySelector('.field-note');if(main&&intro&&note&&intro.nextElementSibling!==note)intro.after(note)};
+moveFieldNoteBelowIntro();
+const setupGuideSlides=()=>{const main=document.querySelector('main'),intro=main?.querySelector(':scope > .intro'),note=main?.querySelector(':scope > .field-note'),layout=main?.querySelector(':scope > .guide-layout');if(!main||!intro||!note||!layout||main.dataset.slidesReady)return;main.dataset.slidesReady='true';const landing=document.createElement('section'),learning=document.createElement('section');landing.className='guide-slide landing-slide';landing.setAttribute('aria-label','Live Field Guide introduction');learning.className='guide-slide learning-slide';learning.setAttribute('aria-label','Live Field Guide lessons');main.insertBefore(landing,intro);landing.append(intro,note);learning.append(layout);main.append(learning);const content=note.querySelector(':scope > div');if(content&&!content.querySelector('#enter-guide')){const enter=document.createElement('button');enter.id='enter-guide';enter.className='enter-guide-button';enter.type='button';enter.textContent='Enter the field guide ↗';content.append(enter);enter.addEventListener('click',()=>{document.body.classList.add('learning-active');landing.setAttribute('aria-hidden','true');learning.removeAttribute('aria-hidden');window.scrollTo({top:0,behavior:'smooth'});document.querySelector('#workspace')?.focus({preventScroll:true})})}landing.removeAttribute('aria-hidden');learning.setAttribute('aria-hidden','true')};
+setupGuideSlides();

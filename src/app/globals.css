@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --c-bg: 31 31 31;
+  --c-bg: 29 29 28;
   --c-text: 255 255 255;
   --c-muted: 168 168 168;
   --c-rule: 78 78 78;
@@ -18,7 +18,14 @@
     background: rgb(var(--c-bg));
   }
   body {
-    @apply font-sans text-[15px] antialiased;
+    @apply text-[15px] antialiased;
+    font-family: var(--font-body), sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: clamp(16px, 1vw, 18px);
+    line-height: 1.25;
+    font-kerning: normal;
+    font-feature-settings: "kern", "liga" 1, "calt" 1;
     background: rgb(var(--c-bg));
     color: rgb(var(--c-text));
     position: relative;
@@ -55,7 +62,7 @@ body::before {
 
 @layer components {
   .kicker {
-    @apply font-mono text-[11px] uppercase tracking-[0.08em] text-muted;
+    @apply font-mono text-[11px] uppercase tracking-[0.132em] text-muted;
   }
   .kicker b {
     @apply font-medium text-paper;
@@ -105,7 +112,7 @@ body::before {
 
   /* Shared page container + type (keeps header, pages and footer aligned) */
   .wrap {
-    @apply mx-auto max-w-6xl px-5;
+    @apply mx-auto max-w-[980px] px-5;
   }
   .page-title {
     @apply font-display font-bold leading-[1.02] tracking-[-0.02em];
