@@ -14,9 +14,6 @@ export default function MagazinePage() {
         Dispatches, interviews, histories and experiments in listening.
       </p>
 
-      <p className="kicker mt-6" aria-label="Planned editorial formats">
-        Planned formats: {editorialFormats.join(" / ")}
-      </p>
 
       <ul className="mt-10 border-b border-rule">
         {stories.map((s) => (

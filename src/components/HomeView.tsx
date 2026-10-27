@@ -6,6 +6,19 @@ export type Scene = { name: string; slug: string; count?: number };
 export type ReleaseCard = { slug: string; artistSlug: string; coverUrl?: string; artist: string; city: string; title: string; year: number | null; format: string | null };
 export type ArtistSpotlight = { slug: string; name: string; location: string; imageUrl?: string; summary: string };
 
+const homepageVideos = [
+  { title: "Boiler Room live set", href: "https://youtu.be/r_niEkkh30E?si=N-xSPv_1gffg_8i2&t=945" },
+  { title: "Boiler Room artist session" },
+  { title: "Bedroom live electronic set" },
+  { title: "Hardware and modular session" },
+];
+
+const homepageEvents = [
+  "Upcoming electronic event",
+  "Club night announcement",
+  "Live electronic showcase",
+];
+
 function StoryRow({ story }: { story: Story }) {
   return (
     <li className="rule-t last:border-b">
@@ -61,7 +74,7 @@ export default function HomeView({ lead, side, scenes, releases, spotlight, arch
 
       <section aria-labelledby="editorials" className="mt-24 sm:mt-32"><div className="mb-4 flex items-baseline justify-between gap-4"><h2 id="editorials" className="headline-md">Editorials</h2><Link href="/editorial" className="kicker no-underline hover:underline">All editorial →</Link></div><ul>{stories.map((story) => <StoryRow key={story.href} story={story} />)}</ul></section>
 
-      <section aria-labelledby="discover" className="mt-24 sm:mt-32"><h2 id="discover" className="headline-md mb-5">Discover</h2><ul className="border-b border-rule">{scenes.map((scene) => <li key={scene.slug} className="rule-t"><Link href={`/discover/${scene.slug}`} className="flex items-baseline justify-between gap-4 py-4 no-underline hover:no-underline sm:py-5"><span className="font-display text-3xl font-bold tracking-tight decoration-1 underline-offset-4 hover:underline sm:text-5xl">{scene.name}</span>{typeof scene.count === "number" && <span className="kicker shrink-0">{String(scene.count).padStart(2, "0")} records</span>}</Link></li>)}</ul></section>
+<section aria-labelledby="discover" className="mt-24 sm:mt-32"><div className="mb-5 flex items-baseline justify-between gap-4"><h2 id="discover" className="headline-md">Discover</h2><Link href="/discover" className="kicker no-underline hover:underline">Explore all →</Link></div><div className="grid grid-cols-4 gap-2 sm:gap-3">{homepageVideos.map((video) => { const card = <><div className="flex aspect-video items-center justify-center border border-rule bg-white/[0.04]"><span className="font-display text-lg">▶</span></div><h3 className="mt-2 line-clamp-2 font-display text-[11px] font-semibold leading-tight tracking-tight">{video.title}</h3></>; return video.href ? <a key={video.title} href={video.href} target="_blank" rel="noreferrer" className="group block no-underline hover:no-underline">{card}</a> : <div key={video.title}>{card}</div>; })}</div><div className="mt-5 grid grid-cols-3 gap-2 sm:gap-3">{homepageEvents.map((event) => <div key={event} className="border border-rule p-2 sm:p-3"><div className="flex aspect-[4/3] items-center justify-center bg-white/[0.04]"><span className="kicker text-[9px]">Event placeholder</span></div><h3 className="mt-2 line-clamp-2 font-display text-[11px] font-semibold leading-tight tracking-tight">{event}</h3></div>)}</div></section>
 
       <section aria-labelledby="contribute" className="mt-24 border-t border-rule pt-10 sm:mt-32 sm:pt-12"><p className="kicker">Keep the archive alive</p><div className="mt-4 flex flex-col justify-between gap-6 md:flex-row md:items-end"><div><h2 id="contribute" className="headline-md text-3xl">Know something we missed?</h2><p className="mt-3 max-w-prose text-muted">Tell us about an artist, label, space, release or tape worth keeping in the record.</p></div><a href="mailto:info@tape_x247.com?subject=Submission%20for%20tape_x247" className="btn w-fit">Submit a lead →</a></div></section>
     </div>
