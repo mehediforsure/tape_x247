@@ -35,26 +35,20 @@ export default function Header() {
 
   return (
     <header className="rule-b relative z-20">
-      <div className="wrap flex flex-wrap items-center justify-between gap-x-6 gap-y-3 py-4">
+      <div className="wrap flex flex-wrap items-center justify-between gap-x-6 gap-y-[5px] py-[8px] md:gap-y-3 md:py-[13.6px]">
         <Link
           href="/"
           aria-label="tape_x247 home"
-          className="flex items-center gap-2.5 no-underline hover:no-underline"
+className="hidden items-center gap-2.5 no-underline hover:no-underline md:flex"
         >
-          <Image
-            src="/logos-fonts/main%20logo.png"
-            alt="tape_x247"
-            width={80}
-            height={80}
-            priority
-            className="h-20 w-20 object-contain"
-          />
+
+          <Image src="/logos-fonts/main%20logo.png" alt="tape_x247" width={80} height={80} priority className="hidden h-[68px] w-[68px] object-contain md:block" />
         </Link>
         <div className="header-controls" ref={controls} onBlur={(event) => {
           if (!event.currentTarget.contains(event.relatedTarget)) setOpen(false);
         }}>
           <div className="header-desktop-nav"><NavLinks /></div>
-          <button ref={toggle} type="button" className="header-menu-toggle"
+          <button ref={toggle} type="button" className="header-menu-toggle max-md:h-[37.4px] max-md:w-[37.4px]"
             aria-label={open ? "Close navigation menu" : "Open navigation menu"}
             aria-expanded={open} aria-controls="header-dropdown"
             onClick={() => setOpen((value) => !value)}>

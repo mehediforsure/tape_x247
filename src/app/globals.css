@@ -152,9 +152,10 @@ body::after {
   mix-blend-mode: multiply;
 }
 @media (max-width: 767px) {
-  header > .wrap { flex-direction: column; align-items: flex-end; }
-  header > .wrap > a { align-self: flex-end; }
+header > .wrap { align-items: center; }
+header > .wrap > a { align-self: center; }
   .header-controls { width: 100%; margin-left: 0; justify-content: flex-end; }
+  .header-menu-toggle { width: 37.4px; height: 37.4px; }
   .header-desktop-nav nav ul { flex-wrap: nowrap; justify-content: flex-end; column-gap: 1.25rem; }
   .header-desktop-nav nav a { font-weight: 700; }
   .background-tile { background-image: url("/background-mobile.webp"); }

@@ -44,19 +44,18 @@ export default function HomeView({ lead, side, scenes, releases, spotlight, arch
 
   return (
     <div className="wrap py-12 sm:py-16">
-      {featuredRelease ? <section aria-labelledby="start-here" className="grid gap-8 text-center lg:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.65fr)] lg:gap-8 lg:text-left">
-        <div>
-          <p className="kicker text-base">Start here</p>
+{featuredRelease ? <section aria-labelledby="start-here" className="grid grid-cols-2 gap-4 text-left lg:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.65fr)] lg:gap-8 lg:text-left">
+<div className="order-2 w-full max-lg:col-start-2 max-lg:row-start-1 lg:order-1">
+<p className="mx-0 w-full text-left font-normal text-base uppercase tracking-[0.08em] max-lg:justify-self-start lg:mx-0 lg:font-semibold lg:text-lg">START HERE</p>
           <Link href={`/featured/artists/${featuredRelease.artistSlug}`} aria-label={`View ${featuredRelease.title} release in the artist discography`} className="mx-auto block w-[85%] lg:mx-0">
-            <CoverArt seed={featuredRelease.slug} imageSrc={featuredRelease.coverUrl} className="mt-4 aspect-[4/3] w-full" />
+<CoverArt seed={featuredRelease.slug} imageSrc={featuredRelease.coverUrl} className="mt-8 aspect-[4/3] w-full max-lg:w-[115%] max-lg:-translate-x-[7.5%]" />
           </Link>
         </div>
-        <div className="flex flex-col justify-end pb-1">
-          <p className="kicker">{["Release", featuredRelease.format, featuredRelease.year].filter(Boolean).join(" · ")}</p>
-          <h1 id="start-here" className="headline-xl mt-3">{featuredRelease.title}</h1>
-          <p className="mt-4 max-w-prose text-lg text-muted lg:mx-0 lg:mr-auto">{featuredRelease.artist} · {featuredRelease.city}</p>
-          <div className="mt-8 border-y border-rule py-4 text-sm text-muted"><div className="flex items-center justify-between gap-4"><span>Audio preview</span><span>Embed slot · coming soon</span></div></div>
-          <Link href="/featured/artists" className="btn mx-auto mt-6 w-fit lg:mx-0">Explore more artists →</Link>
+<div className="order-1 flex w-full flex-col items-start justify-end pb-1 text-left max-lg:contents lg:order-2 lg:mx-0 lg:w-auto">
+<p className="kicker max-lg:col-start-1 max-lg:row-start-2">{["Release", featuredRelease.format, featuredRelease.year].filter(Boolean).join(" · ")}</p>
+<h1 id="start-here" className="headline-xl mt-3 max-md:text-xl max-lg:col-start-1 max-lg:row-start-1">{featuredRelease.title}</h1>
+<p className="mt-4 max-w-prose text-lg text-muted max-md:text-sm max-lg:col-start-1 max-lg:row-start-3 lg:mx-0 lg:mr-auto">{featuredRelease.artist} · {featuredRelease.city}</p>
+<Link href="/featured/artists" className="btn mx-0 mt-6 w-fit max-lg:col-span-2 max-lg:row-start-4 lg:mx-0">Explore more artists →</Link>
         </div>
       </section> : <section><h1 className="headline-xl">A zine. A living archive.</h1><p className="mt-4 text-muted">{archiveUnavailable ? "Archive records are temporarily unavailable. Explore the stories below and try again shortly." : "No published releases yet. Explore the stories and scenes below."}</p></section>}
 
