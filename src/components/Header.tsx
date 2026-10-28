@@ -65,7 +65,6 @@ export default function Header() {
             <div className="header-dropdown-inner" onClick={(event) => {
               if (event.target instanceof Element && event.target.closest("a")) setOpen(false);
             }}>
-              <NavLinks />
               <div className="header-theme"><span>Light theme</span><ThemeToggle /></div>
             </div>
           </div>

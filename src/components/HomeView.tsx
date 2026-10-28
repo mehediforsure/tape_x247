@@ -44,19 +44,19 @@ export default function HomeView({ lead, side, scenes, releases, spotlight, arch
 
   return (
     <div className="wrap py-12 sm:py-16">
-      {featuredRelease ? <section aria-labelledby="start-here" className="grid gap-8 lg:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.65fr)] lg:gap-8">
+      {featuredRelease ? <section aria-labelledby="start-here" className="grid gap-8 text-center lg:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.65fr)] lg:gap-8 lg:text-left">
         <div>
           <p className="kicker text-base">Start here</p>
-          <Link href={`/featured/artists/${featuredRelease.artistSlug}`} aria-label={`View ${featuredRelease.title} release in the artist discography`} className="block w-[85%]">
+          <Link href={`/featured/artists/${featuredRelease.artistSlug}`} aria-label={`View ${featuredRelease.title} release in the artist discography`} className="mx-auto block w-[85%] lg:mx-0">
             <CoverArt seed={featuredRelease.slug} imageSrc={featuredRelease.coverUrl} className="mt-4 aspect-[4/3] w-full" />
           </Link>
         </div>
         <div className="flex flex-col justify-end pb-1">
           <p className="kicker">{["Release", featuredRelease.format, featuredRelease.year].filter(Boolean).join(" · ")}</p>
           <h1 id="start-here" className="headline-xl mt-3">{featuredRelease.title}</h1>
-          <p className="mt-4 max-w-prose text-lg text-muted">{featuredRelease.artist} · {featuredRelease.city}</p>
+          <p className="mt-4 max-w-prose text-lg text-muted lg:mx-0 lg:mr-auto">{featuredRelease.artist} · {featuredRelease.city}</p>
           <div className="mt-8 border-y border-rule py-4 text-sm text-muted"><div className="flex items-center justify-between gap-4"><span>Audio preview</span><span>Embed slot · coming soon</span></div></div>
-          <Link href="/featured/artists" className="btn mt-6 w-fit">Explore more artists →</Link>
+          <Link href="/featured/artists" className="btn mx-auto mt-6 w-fit lg:mx-0">Explore more artists →</Link>
         </div>
       </section> : <section><h1 className="headline-xl">A zine. A living archive.</h1><p className="mt-4 text-muted">{archiveUnavailable ? "Archive records are temporarily unavailable. Explore the stories below and try again shortly." : "No published releases yet. Explore the stories and scenes below."}</p></section>}
 
