@@ -25,11 +25,12 @@ export default async function ScenePage({ params }: { params: Promise<{ country:
           : "No records have been added for this country yet."}
       </p>
       {artists.length > 0 && (
-        <ul className="mt-10 border-b border-rule">
-          {artists.map((a) => (
-            <ArtistRow key={a.slug} a={a} />
+        <><div className="index-head mt-10" aria-hidden="true"><span>No.</span><span>Artist</span><span className="index-meta">Scene / Sound</span><span aria-hidden="true">&#8599;</span></div>
+        <ul className="index-list">
+          {artists.map((a, index) => (
+            <ArtistRow key={a.slug} a={a} index={index} />
           ))}
-        </ul>
+        </ul></>
       )}
     </div>
   );

@@ -15,7 +15,7 @@ export type Story = {
 function Kicker({ s }: { s: Story }) {
   return (
     <p className="kicker">
-      <b>{s.kicker}</b>
+      <span className="editorial-category">{s.kicker}</span>
       {s.date ? ` · ${s.date}` : ""}
       {s.status ? (
         <>
@@ -34,10 +34,10 @@ export function LeadStory({ s, imageSrc }: { s: Story; imageSrc?: string }) {
         <CoverArt seed={s.seed} label={s.kicker} imageSrc={imageSrc} className="aspect-[4/3] w-full" />
         <div className="mt-4 space-y-3">
           <Kicker s={s} />
-          <h1 className="headline-xl hover:underline decoration-1 underline-offset-4">
+          <h1 className="headline-xl story-title hover:underline decoration-1 underline-offset-4">
             {s.title}
           </h1>
-          {s.deck && <p className="max-w-xl text-lg text-muted">{s.deck}</p>}
+          {s.deck && <p className="story-deck max-w-xl text-lg text-muted">{s.deck}</p>}
           {s.byline && <p className="kicker">By {s.byline}</p>}
         </div>
       </Link>
@@ -55,7 +55,7 @@ export function SideStory({ s }: { s: Story }) {
         <CoverArt seed={s.seed} className="aspect-square w-full" />
         <div className="space-y-1.5">
           <Kicker s={s} />
-          <h3 className="headline-md hover:underline decoration-1 underline-offset-4">
+          <h3 className="headline-md story-title hover:underline decoration-1 underline-offset-4">
             {s.title}
           </h3>
         </div>
@@ -74,10 +74,10 @@ export function FeedRow({ s }: { s: Story }) {
         <CoverArt seed={s.seed} className="aspect-square w-full" />
         <div className="space-y-1.5">
           <Kicker s={s} />
-          <h3 className="headline-md hover:underline decoration-1 underline-offset-4">
+          <h3 className="headline-md story-title hover:underline decoration-1 underline-offset-4">
             {s.title}
           </h3>
-          {s.deck && <p className="hidden max-w-xl text-muted sm:block">{s.deck}</p>}
+          {s.deck && <p className="story-deck hidden max-w-xl text-muted sm:block">{s.deck}</p>}
         </div>
       </Link>
     </li>

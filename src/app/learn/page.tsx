@@ -33,7 +33,7 @@ export default function LearnPage() {
             loading="eager"
             className="block h-[75dvh] min-h-[600px] w-full border-0"
           />
-          <p className="mt-3 text-sm text-neutral-400">
+          <p className="mt-3 text-sm text-muted">
             If the embedded studio does not load, <a className="underline underline-offset-4" href="https://roland50.studio/" target="_blank" rel="noreferrer">open Roland 50 Studio directly ↗</a>.
           </p>
         </section>

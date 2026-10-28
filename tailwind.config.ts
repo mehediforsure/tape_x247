@@ -14,8 +14,9 @@ const config: Config = {
         label: "rgb(var(--c-label) / <alpha-value>)",
       },
       fontFamily: {
-        sans: ["var(--font-body)", "Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
-        display: ["var(--font-display)", "Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
+        sans: ["var(--font-ui)", "var(--font-bn-sans)", "var(--font-body)", "Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
+        display: ["var(--font-ui)", "var(--font-bn-sans)", "var(--font-display)", "Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
+        editorial: ["var(--font-editorial)", "var(--font-bn-serif)", "Georgia", "serif"],
         mono: ["var(--font-mono)", "monospace"],
         stamp: ["var(--font-stamp)", "Courier New", "monospace"],
       },

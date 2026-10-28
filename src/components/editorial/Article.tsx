@@ -20,38 +20,38 @@ export default async function Article({ lead }: { lead: Dispatch }) {
   const kicker = kickerFor(lead);
 
   return (
-    <article className="wrap py-10">
+    <article className="wrap article-page py-10">
       <Link href="/editorial" className="kicker">← Editorial</Link>
 
-      <header className="mt-6 max-w-4xl space-y-4">
+      <header className="editorial-header space-y-4">
         <p className="kicker">
-          <b>{kicker}</b>
+          <span className="editorial-category">{kicker}</span>
           {lead.filed !== "Not filed" ? ` · ${lead.filed}` : ""}{" "}
           <span className="stamp ml-1">{lead.status}</span>
         </p>
         <h1 className="page-title">{lead.title}</h1>
-        <p className="max-w-2xl text-xl text-muted">{lead.deck}</p>
-        <p className="kicker">By {lead.byline}</p>
+        <p className="editorial-deck text-muted">{lead.deck}</p>
+        <p className="editorial-byline">By {lead.byline}</p>
         <p className="text-sm text-muted">Placeholder article for layout testing.</p>
       </header>
 
       <CoverArt seed={lead.slug} label={kicker} className="mt-8 aspect-[16/7] w-full" />
 
-      <div className="mt-10 grid gap-12 lg:grid-cols-[1fr_20rem]">
-        <div className="prose-body max-w-prose">
+      <div className="editorial-layout">
+        <div className="prose-body editorial-body">
           {lead.body.length === 0 && (
             <p>This article is a planning stub. No story has been published yet.</p>
           )}
-          {lead.body.slice(0, 2).map((text) => <p key={text}>{text}</p>)}
+          {lead.body.slice(0, 2).map((text) => <p key={text} lang={/[\u0980-\u09ff]/.test(text) ? "bn" : undefined}>{text}</p>)}
           {lead.pull && (
-            <blockquote className="border-l border-paper py-1 pl-5 font-display text-2xl font-semibold leading-snug">
+            <blockquote className="editorial-pull">
               {lead.pull}
             </blockquote>
           )}
-          {lead.body.slice(2).map((text) => <p key={text}>{text}</p>)}
+          {lead.body.slice(2).map((text) => <p key={text} lang={/[\u0980-\u09ff]/.test(text) ? "bn" : undefined}>{text}</p>)}
         </div>
 
-        <aside className="space-y-10">
+        <aside className="editorial-sidebar">
           {archiveUnavailable && <p className="text-sm text-muted">Related artist records are temporarily unavailable.</p>}
           {mentioned.length > 0 && (
             <section>

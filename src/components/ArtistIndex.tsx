@@ -10,9 +10,10 @@ export default async function ArtistIndex() {
         Artists, labels and releases from the scene.
       </p>
       <p className="kicker mt-6">{String(artists.length).padStart(2, "0")} records</p>
-      <ul className="mt-3 border-b border-rule">
-        {artists.map((a) => (
-          <ArtistRow key={a.slug} a={a} />
+      <div className="index-head mt-6" aria-hidden="true"><span>No.</span><span>Artist</span><span className="index-meta">Scene / Sound</span><span aria-hidden="true">&#8599;</span></div>
+      <ul className="index-list">
+        {artists.map((a, index) => (
+          <ArtistRow key={a.slug} a={a} index={index} />
         ))}
       </ul>
     </div>

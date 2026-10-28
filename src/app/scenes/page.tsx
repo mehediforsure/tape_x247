@@ -39,7 +39,7 @@ export default function ScenesPage() {
           {videoRecords.map((record) => (
             <li key={record.title} className="border border-rule p-5">
               <a href={record.href} target="_blank" rel="noreferrer" className="group block no-underline hover:no-underline">
-                <div className="flex aspect-video items-center justify-center bg-white/[0.04] transition-colors group-hover:bg-white/[0.08]">
+                <div className="flex aspect-video items-center justify-center bg-paper/[0.04] transition-colors group-hover:bg-paper/[0.08]">
                   <div className="text-center">
                     <div className="font-display text-4xl">▶</div>
                     <div className="kicker mt-2">Embed placeholder</div>
@@ -59,7 +59,7 @@ export default function ScenesPage() {
         <ul className="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {eventUpdates.map((event) => (
             <li key={event.title} className="border border-rule p-5">
-              <div className="flex aspect-[4/3] items-center justify-center bg-white/[0.04]">
+              <div className="flex aspect-[4/3] items-center justify-center bg-paper/[0.04]">
                 <span className="kicker">Event placeholder</span>
               </div>
               <span className="font-display text-lg font-bold tracking-tight sm:text-xl">{event.title}</span>
