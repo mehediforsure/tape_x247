@@ -49,7 +49,7 @@ className="hidden items-center gap-2.5 no-underline hover:no-underline md:flex"
         }}>
           <div className="header-desktop-nav"><NavLinks /></div>
           <Link href="/" aria-label="tape_x247 home" className="mobile-header-home no-underline hover:no-underline md:hidden">
-            <Image src="/logos-fonts/main%20logo.png" alt="" width={36} height={36} priority className="h-[35.7px] w-[35.7px] object-contain" />
+            <Image src="/logos-fonts/main%20logo.png" alt="" width={36} height={36} priority className="h-[39.27px] w-[39.27px] object-contain" />
           </Link>
           <div id="header-dropdown" className="header-dropdown" data-open={open}
             inert={!open} aria-hidden={!open}>

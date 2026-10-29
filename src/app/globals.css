@@ -156,7 +156,7 @@ header > .wrap { display: block; }
   .header-controls { position: relative; width: 100%; min-height: 74.8px; margin-left: 0; display: block; }
   .header-menu-toggle { position: absolute; top: 37.4px; right: auto; left: 0; width: 37.4px; height: 37.4px; }
   .header-desktop-nav { position: absolute; top: 50%; right: 0; width: calc(100% - 53px); min-width: 0; transform: translateY(-50%); }
-  .mobile-header-home { position: absolute; top: 0; left: 0; display: flex; align-items: center; justify-content: flex-start; }
+  .mobile-header-home { position: absolute; top: 50%; left: 0; display: flex; align-items: center; justify-content: flex-start; transform: translateY(-50%); }
   .header-dropdown { right: auto; left: 0; }
   .header-desktop-nav nav ul { flex-wrap: nowrap; justify-content: flex-end; column-gap: 1.25rem; }
   .background-tile { background-image: url("/background-mobile.webp"); }
@@ -195,6 +195,27 @@ header > .wrap { display: block; }
 .theme-switch-thumb { position: absolute; top: 2px; left: 2px; width: 12px; height: 12px; background: rgb(var(--c-text)); transition: transform 150ms ease; }
 :root[data-theme="light"] .theme-switch-thumb { transform: translateX(18px); }
 @media (prefers-reduced-motion: reduce) { .theme-switch-thumb { transition: none; } }
+.consent-shell, .subscription-shell { position: fixed; z-index: 70; border: 1px solid rgb(var(--c-rule)); background: rgb(var(--c-bg)); color: rgb(var(--c-text)); box-shadow: 0 12px 32px rgb(0 0 0 / .2); }
+.consent-settings { position: fixed; left: 1rem; bottom: 1rem; z-index: 60; border: 1px solid rgb(var(--c-rule)); background: rgb(var(--c-bg) / .9); color: rgb(var(--c-muted)); padding: .35rem .55rem; font: inherit; font-size: .68rem; text-transform: uppercase; cursor: pointer; }
+.consent-settings:hover, .consent-settings:focus-visible { color: rgb(var(--c-text)); border-color: rgb(var(--c-text)); }
+.consent-shell { inset: auto 1rem 1rem 1rem; display: flex; align-items: end; justify-content: space-between; gap: 1.5rem; padding: 1rem 1.25rem; }
+.consent-copy { max-width: 42rem; }
+.consent-actions { display: flex; flex-wrap: wrap; justify-content: end; gap: .5rem; }
+.consent-preferences { display: grid; gap: .75rem; min-width: min(100%, 26rem); }
+.consent-option { display: flex; align-items: center; justify-content: space-between; gap: 1rem; border-top: 1px solid rgb(var(--c-rule)); padding-top: .65rem; font-size: .8rem; }
+.consent-option span { display: grid; gap: .15rem; }
+.consent-option small { color: rgb(var(--c-muted)); }
+.subscription-shell { right: 1rem; bottom: 1rem; width: min(23rem, calc(100vw - 2rem)); padding: 1.25rem; }
+.subscription-dismiss { position: absolute; top: .55rem; right: .7rem; border: 0; background: transparent; color: inherit; font-size: 1.3rem; cursor: pointer; }
+.subscription-form { display: grid; gap: .65rem; margin-top: 1rem; }
+.subscription-form input[type="email"] { border: 1px solid rgb(var(--c-rule)); border-radius: 0; background: transparent; color: inherit; padding: .65rem .75rem; font: inherit; }
+.subscription-message { color: rgb(var(--c-muted)); font-size: .8rem; }
+.subscription-honeypot { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.floating-theme-toggle { position: fixed; right: 1rem; bottom: 5.5rem; z-index: 65; display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border: 1px solid rgb(var(--c-rule)); border-radius: 999px; background: rgb(var(--c-bg) / .9); color: rgb(var(--c-text)); font-size: 1.1rem; cursor: pointer; opacity: 1; transition: opacity 5s ease, transform 180ms ease, border-color 180ms ease; }
+.floating-theme-toggle.is-hidden { opacity: 0; transform: scale(.92); }
+.floating-theme-toggle:hover, .floating-theme-toggle:focus-visible { opacity: 1; border-color: rgb(var(--c-text)); transform: scale(1.05); }
+@media (prefers-reduced-motion: reduce) { .floating-theme-toggle { transition: none; } }
+@media (max-width: 640px) { .consent-shell { align-items: stretch; flex-direction: column; gap: .9rem; } .consent-actions { justify-content: start; } }
 nav, h1, h2, h3, h4, label { text-transform: uppercase; letter-spacing: -.025em; }
 :lang(bn) { text-transform: none; letter-spacing: normal; }
 :lang(bn) :is(h1,h2,h3,h4,label,.kicker,.tag,.chip,.stamp), :is(h1,h2,h3,h4,label,.kicker,.tag,.chip,.stamp):lang(bn) { text-transform: none; letter-spacing: normal; }

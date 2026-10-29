@@ -3,6 +3,9 @@ import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Background from "@/components/Background";
+import ConsentManager from "@/components/ConsentManager";
+import SubscriptionPopup from "@/components/SubscriptionPopup";
+import FloatingThemeToggle from "@/components/FloatingThemeToggle";
 import "./globals.css";
 import { Inter, IBM_Plex_Sans, IBM_Plex_Mono, Special_Elite, Instrument_Sans, Newsreader, Noto_Sans_Bengali, Noto_Serif_Bengali } from "next/font/google";
 
@@ -54,6 +57,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <YouTubeEmbeds />
         <Background />
+        <ConsentManager />
+        <SubscriptionPopup />
+        <FloatingThemeToggle />
         <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:bg-oxide focus:p-4">Skip to content</a>
           <Header />
           <main id="main-content">{children}</main>

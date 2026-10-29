@@ -70,6 +70,14 @@ function eventMarkup(url: string, image: string) {
 
 export default function YouTubeEmbeds() {
   useEffect(() => {
+    let mediaConsent = false;
+    try {
+      const stored = JSON.parse(localStorage.getItem("tape-cookie-consent-v1") ?? "null") as { media?: unknown } | null;
+      mediaConsent = stored?.media === true;
+    } catch {}
+
+    const hydrate = () => {
+      if (!mediaConsent) return;
     const section =
       window.location.pathname === "/discover"
         ? document.querySelector<HTMLElement>("main section")
@@ -78,14 +86,14 @@ export default function YouTubeEmbeds() {
           );
     const cards = section?.querySelector<HTMLElement>(":scope > .grid")?.children;
 
-    if (!cards) return;
+      if (!cards) return;
 
     const videos =
       window.location.pathname === "/discover"
         ? [...DISCOVER_VIDEOS, ...DISCOVER_ONLY_VIDEOS]
         : DISCOVER_VIDEOS;
 
-    videos.forEach(({ id, title, start }, index) => {
+      videos.forEach(({ id, title, start }, index) => {
       const card = cards[index] as HTMLElement | undefined;
       if (!card || card.dataset.embedReady === "true") return;
 
@@ -100,9 +108,9 @@ export default function YouTubeEmbeds() {
         },
         { once: true },
       );
-    });
+      });
 
-    if (window.location.pathname === "/discover") {
+      if (window.location.pathname === "/discover") {
       const eventSection = document.querySelectorAll<HTMLElement>("main section")[1];
       const eventCards = eventSection?.querySelector<HTMLElement>(":scope > .grid")?.children;
 
@@ -116,7 +124,16 @@ export default function YouTubeEmbeds() {
           .slice(DISCOVER_EVENTS.length)
           .forEach((card) => card.remove());
       }
-    }
+      }
+    };
+
+    const onConsent = (event: Event) => {
+      mediaConsent = (event as CustomEvent<boolean>).detail === true;
+      hydrate();
+    };
+    window.addEventListener("tape:media-consent", onConsent);
+    hydrate();
+    return () => window.removeEventListener("tape:media-consent", onConsent);
   }, []);
 
   return null;

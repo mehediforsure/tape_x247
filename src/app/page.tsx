@@ -4,9 +4,8 @@ import { getArticles, getArtists } from "@/lib/content/queries";
 import { toStory } from "@/lib/content/stories";
 import type { Artist } from "@/types/demo";
 
-// Re-fetch from Supabase at most once a minute (otherwise the build-time snapshot is served forever).
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+// Keep the homepage fast for returning visitors while refreshing archive data regularly.
+export const revalidate = 60;
 
 export default async function HomePage() {
   const articles = getArticles();

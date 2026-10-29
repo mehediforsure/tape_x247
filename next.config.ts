@@ -3,6 +3,18 @@ import type { NextConfig } from "next";
 const config: NextConfig = {
   // Keep production builds from overwriting the running dev server's assets.
   distDir: process.env.NODE_ENV === "development" ? ".next-dev" : ".next",
+  images: {
+    formats: ["image/avif", "image/webp"],
+    minimumCacheTTL: 60 * 60 * 24,
+    remotePatterns: [
+      { protocol: "https", hostname: "smtlecueburhxlarqlqg.supabase.co" },
+      { protocol: "https", hostname: "norient.com" },
+      { protocol: "https", hostname: "www.thedailystar.net" },
+      { protocol: "https", hostname: "mixmag.asia" },
+      { protocol: "https", hostname: "f4.bcbits.com" },
+      { protocol: "https", hostname: "images.unsplash.com" },
+    ],
+  },
   async redirects() {
     return [
       { source: "/archive/:slug(shoummo-saha)", destination: "/featured/artists/:slug", permanent: true },
