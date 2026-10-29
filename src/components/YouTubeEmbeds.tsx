@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { discoverEvents } from "@/content/discover-events";
 
 type DiscoverVideo = {
   id: string;
@@ -18,12 +19,6 @@ const DISCOVER_VIDEOS: DiscoverVideo[] = [
 const DISCOVER_ONLY_VIDEOS: DiscoverVideo[] = [
   { id: "V6-4ZobcgTk", title: "Dhaka live electronic session" },
   { id: "s6erFwsRmpo", title: "Electronic music video" },
-];
-
-const DISCOVER_EVENTS = [
-  "https://ra.co/events/2460485",
-  "https://ra.co/events/2460485",
-  "https://allevents.in/dhaka/all",
 ];
 
 const EVENT_IMAGES = [
@@ -52,18 +47,16 @@ function embedMarkup(id: string, title: string, start?: number) {
         <img src="https://i.ytimg.com/vi/${id}/hqdefault.jpg" alt="" loading="lazy" />
       </button>
     </span>
-    <span class="youtube-card-title">${title}</span>
   `;
 }
 
-function eventMarkup(url: string, image: string) {
+function eventMarkup(event: (typeof discoverEvents)[number], image: string) {
   return `
-    <a href="${url}" target="_blank" rel="noreferrer" class="group block no-underline hover:no-underline">
+    <a href="${event.href}" target="_blank" rel="noreferrer" aria-label="View event listing" class="group block no-underline hover:no-underline">
       <div class="aspect-[4/3] overflow-hidden bg-paper/[0.04] transition-opacity group-hover:opacity-80">
         <img src="${image}" alt="" loading="lazy" class="h-full w-full object-cover" />
       </div>
-      <span class="font-display text-lg font-bold tracking-tight decoration-1 underline-offset-4 group-hover:underline sm:text-xl">Event update</span>
-      <span class="kicker mt-2 block">View on Resident Advisor or AllEvents</span>
+
     </a>
   `;
 }
@@ -114,14 +107,14 @@ export default function YouTubeEmbeds() {
       const eventSection = document.querySelectorAll<HTMLElement>("main section")[1];
       const eventCards = eventSection?.querySelector<HTMLElement>(":scope > .grid")?.children;
 
-      DISCOVER_EVENTS.forEach((url, index) => {
+      discoverEvents.forEach((event, index) => {
         const card = eventCards?.[index] as HTMLElement | undefined;
-        if (card) card.innerHTML = eventMarkup(url, EVENT_IMAGES[index]);
+        if (card) card.innerHTML = eventMarkup(event, EVENT_IMAGES[index]);
       });
 
       if (eventCards) {
         Array.from(eventCards)
-          .slice(DISCOVER_EVENTS.length)
+          .slice(discoverEvents.length)
           .forEach((card) => card.remove());
       }
       }

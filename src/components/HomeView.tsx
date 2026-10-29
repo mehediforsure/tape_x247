@@ -1,5 +1,8 @@
 "use client";
 
+import ArrowUpRight from "@/components/ArrowUpRight";
+
+
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -112,8 +115,8 @@ export default function HomeView({ lead, side, scenes, releases, initialReleaseI
 
       <section aria-labelledby="new-on-tape" className="mt-24 sm:mt-32">
         <div className="mb-6 flex items-baseline justify-between gap-4"><h2 id="new-on-tape" className="headline-md">Latest releases</h2><Link href="/featured/releases" className="kicker no-underline hover:underline">See all →</Link></div>
-        <div className="index-head" aria-hidden="true"><span>No.</span><span>Release / Artist</span><span className="index-meta">Format / Year</span><span aria-hidden="true">&#8599;</span></div>
-        <ol className="index-list">{releases.slice(0, 5).map((release, index) => <li key={release.slug}><Link href={release.href} className="index-row"><span className="index-number">{String(index + 1).padStart(2, "0")}</span><div className="index-identity"><CoverArt seed={release.slug} imageSrc={release.coverUrl} className="aspect-square" /><div><h3 className="index-title">{release.title}</h3><p className="index-meta mt-2">{release.artist} / {release.city}</p></div></div><p className="index-meta">{[release.format, release.year].filter(Boolean).join(" / ") || "Not documented"}</p><span className="index-arrow" aria-hidden="true">&#8599;</span></Link></li>)}</ol>
+        <div className="index-head" aria-hidden="true"><span>No.</span><span>Release / Artist</span><span className="index-meta">Format / Year</span><span aria-hidden="true"><ArrowUpRight /></span></div>
+        <ol className="index-list">{releases.slice(0, 5).map((release, index) => <li key={release.slug}><Link href={release.href} className="index-row"><span className="index-number">{String(index + 1).padStart(2, "0")}</span><div className="index-identity"><CoverArt seed={release.slug} imageSrc={release.coverUrl} className="aspect-square" /><div><h3 className="index-title">{release.title}</h3><p className="index-meta mt-2">{release.artist} / {release.city}</p></div></div><p className="index-meta">{[release.format, release.year].filter(Boolean).join(" / ") || "Not documented"}</p><span className="index-arrow" aria-hidden="true"><ArrowUpRight /></span></Link></li>)}</ol>
       </section>
 
       {spotlight ? <section aria-labelledby="artist-spotlight" className="mt-24 border-t border-rule pt-10 sm:mt-32 sm:pt-12">
@@ -123,9 +126,38 @@ export default function HomeView({ lead, side, scenes, releases, initialReleaseI
 
       <section aria-labelledby="editorials" className="mt-24 sm:mt-32"><div className="mb-4 flex items-baseline justify-between gap-4"><h2 id="editorials" className="headline-md">Editorials</h2><Link href="/editorial" className="kicker no-underline hover:underline">All editorial →</Link></div><ul>{stories.map((story, index) => <StoryRow key={story.href} story={story} imageSrc={index === 0 ? "/color01.jpg" : index === 1 ? "/color02.png" : undefined} />)}</ul></section>
 
-<section aria-labelledby="discover" className="mt-24 sm:mt-32"><div className="mb-5 flex items-baseline justify-between gap-4"><h2 id="discover" className="headline-md">Discover</h2><Link href="/discover" className="kicker no-underline hover:underline">Explore all →</Link></div><div className="grid grid-cols-4 gap-2 sm:gap-3">{homepageVideos.map((video) => { const card = <><div className="flex aspect-video items-center justify-center border border-rule bg-paper/[0.04]"><span className="font-display text-lg">▶</span></div><h3 className="mt-2 line-clamp-2 font-display text-[11px] font-semibold leading-tight tracking-tight">{video.title}</h3></>; return video.href ? <a key={video.title} href={video.href} target="_blank" rel="noreferrer" className="group block no-underline hover:no-underline">{card}</a> : <div key={video.title}>{card}</div>; })}</div><div className="mt-5 grid grid-cols-3 gap-2 sm:gap-3">{homepageEvents.map((event) => { const mediaImage = mediaConsent ? event.imageSrc : undefined; const card = <><div className="flex aspect-[4/3] items-center justify-center overflow-hidden bg-paper/[0.04]">{mediaImage ? <img src={mediaImage} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" /> : <span className="kicker text-[9px]">{mediaConsent ? "Event placeholder" : "Enable media cookies to view"}</span>}</div><h3 className="mt-2 line-clamp-2 font-display text-[11px] font-semibold leading-tight tracking-tight">{event.title}</h3></>; return event.href ? <a key={event.title} href={event.href} target="_blank" rel="noreferrer" className="group block border border-rule p-2 no-underline hover:no-underline sm:p-3">{card}</a> : <div key={event.title} className="border border-rule p-2 sm:p-3">{card}</div>; })}</div></section>
+      <section aria-labelledby="discover" className="mt-24 sm:mt-32">
+        <div className="mb-5 flex items-baseline justify-between gap-4">
+          <h2 id="discover" className="headline-md">Discover</h2>
+          <Link href="/discover" className="kicker no-underline hover:underline">Explore all &#8594;</Link>
+        </div>
+        <div className="grid grid-cols-4 gap-2 sm:gap-3">
+          {homepageVideos.map((video) => {
+            const card = <div className="flex aspect-video items-center justify-center border border-rule bg-paper/[0.04]"><span aria-hidden="true" className="font-display text-lg">&#9654;</span></div>;
+            return video.href ? <a key={video.title} href={video.href} target="_blank" rel="noreferrer" aria-label="Watch the live set on YouTube" className="group block no-underline hover:no-underline">{card}</a> : <div key={video.title} role="img" aria-label="Video placeholder">{card}</div>;
+          })}
+        </div>
+        <div className="mt-5 grid grid-cols-3 gap-2 sm:gap-3">
+          {homepageEvents.map((event) => (
+            <a key={event.title} href={event.href} target="_blank" rel="noreferrer" aria-label={event.title} className="group block border border-rule p-2 no-underline hover:no-underline sm:p-3">
+              <div className="flex aspect-[4/3] items-center justify-center overflow-hidden bg-paper/[0.04]">
+                {mediaConsent ? <img src={event.imageSrc} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" /> : <span className="sr-only">Enable media cookies to view</span>}
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
 
-      <section aria-labelledby="contribute" className="mt-24 border-t border-rule pt-10 sm:mt-32 sm:pt-12"><p className="kicker">Keep the archive alive</p><div className="mt-4 flex flex-col justify-between gap-6 md:flex-row md:items-end"><div><h2 id="contribute" className="headline-md text-3xl">Know something we missed?</h2><p className="mt-3 max-w-prose text-muted">Tell us about an artist, label, space, release or tape worth keeping in the record.</p></div><a href="mailto:info@tape_x247.com?subject=Submission%20for%20tape_x247" className="btn w-fit">Submit a lead →</a></div></section>
+      <section aria-labelledby="contribute" className="mt-24 border-t border-rule pt-10 sm:mt-32 sm:pt-12">
+        <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
+          <div>
+            <h2 id="contribute" className="headline-md text-3xl">Know something we missed?</h2>
+            <p className="mt-3 max-w-prose text-muted">Tell us about an artist, label, space, release or tape worth keeping in the record.</p>
+            <p className="mt-2 text-muted">Keep the archive alive</p>
+          </div>
+          <a href="mailto:info@tape_x247.com?subject=Submission%20for%20tape_x247" className="btn w-fit">Submit a lead &#8594;</a>
+        </div>
+      </section>
     </div>
   );
 }

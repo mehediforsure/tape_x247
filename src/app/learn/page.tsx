@@ -1,3 +1,4 @@
+import ArrowUpRight from "@/components/ArrowUpRight";
 export const metadata = {
   title: "Learn | tape_x247",
   description: "Explore timing, envelopes, signal flow and clip launching with the interactive Live Field Guide.",
@@ -9,7 +10,7 @@ export default function LearnPage() {
       <div className="wrap flex flex-wrap items-center justify-between gap-4 py-6">
         <h1 className="page-title" style={{ fontSize: "clamp(2rem, 4vw, 3rem)" }}>Learn</h1>
         <a className="underline underline-offset-4" href="/live-field-guide/index.html">
-          Open full page ↗
+          Open full page <ArrowUpRight />
         </a>
       </div>
       <section className="wrap">
@@ -25,7 +26,7 @@ export default function LearnPage() {
               <p className="kicker">Studio visit</p>
               <h2 className="mt-2 text-2xl font-medium">Roland 50 Studio</h2>
             </div>
-            <a className="underline underline-offset-4" href="https://roland50.studio/" target="_blank" rel="noreferrer">Open full page ↗</a>
+            <a className="underline underline-offset-4" href="https://roland50.studio/" target="_blank" rel="noreferrer">Open full page <ArrowUpRight /></a>
           </div>
           <iframe
             title="Roland 50 Studio"
@@ -36,7 +37,7 @@ export default function LearnPage() {
             className="block h-[75dvh] min-h-[600px] w-full border-0"
           />
           <p className="mt-3 text-sm text-muted">
-            If the embedded studio does not load, <a className="underline underline-offset-4" href="https://roland50.studio/" target="_blank" rel="noreferrer">open Roland 50 Studio directly ↗</a>.
+            If the embedded studio does not load, <a className="underline underline-offset-4" href="https://roland50.studio/" target="_blank" rel="noreferrer">open Roland 50 Studio directly <ArrowUpRight /></a>.
           </p>
         </section>
     </div>

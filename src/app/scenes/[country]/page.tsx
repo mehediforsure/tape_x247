@@ -1,3 +1,4 @@
+import ArrowUpRight from "@/components/ArrowUpRight";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import ArtistRow from "@/components/ArtistRow";
@@ -25,7 +26,7 @@ export default async function ScenePage({ params }: { params: Promise<{ country:
           : "No records have been added for this country yet."}
       </p>
       {artists.length > 0 && (
-        <><div className="index-head mt-10" aria-hidden="true"><span>No.</span><span>Artist</span><span className="index-meta">Scene / Sound</span><span aria-hidden="true">&#8599;</span></div>
+        <><div className="index-head mt-10" aria-hidden="true"><span>No.</span><span>Artist</span><span className="index-meta">Scene / Sound</span><span aria-hidden="true"><ArrowUpRight /></span></div>
         <ul className="index-list">
           {artists.map((a, index) => (
             <ArtistRow key={a.slug} a={a} index={index} />

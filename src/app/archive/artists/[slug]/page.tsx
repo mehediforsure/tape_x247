@@ -1,3 +1,4 @@
+import ArrowUpRight from "@/components/ArrowUpRight";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import CoverArt from "@/components/CoverArt";
@@ -81,7 +82,7 @@ export default async function ArtistPage({
               <div>
                 <p className="kicker">{[r.year, r.format, r.label].filter(Boolean).join(" · ") || "Release details not documented"}</p>
                 <h3 className="font-display mt-1 text-2xl font-bold tracking-tight">{r.title}</h3>
-                {r.links?.length ? <ul className="mt-4 flex flex-wrap gap-4">{r.links.map((link, index) => <li key={`${link.url}-${index}`}><a href={link.url} target="_blank" rel="noopener noreferrer" className="inline-block py-2 text-sm capitalize">Open on {link.label} ↗<span className="sr-only"> (opens in a new tab)</span></a></li>)}</ul> : null}
+                {r.links?.length ? <ul className="mt-4 flex flex-wrap gap-4">{r.links.map((link, index) => <li key={`${link.url}-${index}`}><a href={link.url} target="_blank" rel="noopener noreferrer" className="inline-block py-2 text-sm capitalize">Open on {link.label} <ArrowUpRight /><span className="sr-only"> (opens in a new tab)</span></a></li>)}</ul> : null}
                 <div className="mt-5 grid gap-6 sm:grid-cols-2">
                   <Tracklist
                     heading={r.sideB || r.extraSides?.length || r.format === "Cassette" || r.format === "Vinyl" ? "Side A" : "Tracks"}

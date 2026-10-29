@@ -1,3 +1,4 @@
+import { discoverEvents } from "@/content/discover-events";
 
 export const metadata = { title: "Discover | tape_x247" };
 
@@ -17,14 +18,7 @@ const videoRecords = [
   { title: "South Asian electronic artist set", detail: "YouTube embed placeholder" },
 ];
 
-const eventUpdates = [
-  { title: "Upcoming event", detail: "Date · venue · lineup" },
-  { title: "Club night announcement", detail: "Date · venue · lineup" },
-  { title: "Listening session", detail: "Date · venue · lineup" },
-  { title: "Live electronic showcase", detail: "Date · venue · lineup" },
-  { title: "Festival update", detail: "Date · venue · lineup" },
-  { title: "New local night", detail: "Date · venue · lineup" },
-];
+
 
 export default function ScenesPage() {
   return (
@@ -38,17 +32,13 @@ export default function ScenesPage() {
         <ul className="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {videoRecords.map((record) => (
             <li key={record.title} className="border border-rule p-5">
-              <a href={record.href} target="_blank" rel="noreferrer" className="group block no-underline hover:no-underline">
+              <a aria-label={`Watch ${record.title}`} href={record.href} target="_blank" rel="noreferrer" className="group block no-underline hover:no-underline">
                 <div className="flex aspect-video items-center justify-center bg-paper/[0.04] transition-colors group-hover:bg-paper/[0.08]">
                   <div className="text-center">
                     <div className="font-display text-4xl">▶</div>
-                    <div className="kicker mt-2">Embed placeholder</div>
                   </div>
                 </div>
-                <span className="font-display text-lg font-bold tracking-tight decoration-1 underline-offset-4 hover:underline sm:text-xl">
-                  {record.title}
-                </span>
-                <span className="kicker mt-2 block">{record.detail}</span>
+
               </a>
             </li>
           ))}
@@ -57,13 +47,11 @@ export default function ScenesPage() {
       <section className="mt-14">
         <h2 className="kicker">Event updates</h2>
         <ul className="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {eventUpdates.map((event) => (
-            <li key={event.title} className="border border-rule p-5">
-              <div className="flex aspect-[4/3] items-center justify-center bg-paper/[0.04]">
-                <span className="kicker">Event placeholder</span>
-              </div>
-              <span className="font-display text-lg font-bold tracking-tight sm:text-xl">{event.title}</span>
-              <span className="kicker mt-2 block">{event.detail}</span>
+          {discoverEvents.map((event, index) => (
+            <li key={`${event.href}-${index}`} className="border border-rule p-5">
+              <a href={event.href} target="_blank" rel="noreferrer" aria-label="View event listing" className="block no-underline hover:no-underline">
+                <div className="aspect-[4/3] bg-paper/[0.04]" />
+              </a>
             </li>
           ))}
         </ul>
