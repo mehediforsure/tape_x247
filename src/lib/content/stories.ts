@@ -6,7 +6,7 @@ import type { Dispatch } from "@/types/demo";
 // Anything without one is treated as a plain Dispatch.
 export function kickerFor(d: Dispatch): string {
   const prefix = d.title.split(":")[0]?.trim();
-  return editorialFormats.find(f => f === prefix) ?? "Dispatch";
+  return editorialFormats.find(f => f === prefix) ?? "";
 }
 
 export function toStory(d: Dispatch): Story {
@@ -17,7 +17,7 @@ export function toStory(d: Dispatch): Story {
     title: d.title,
     deck: d.deck,
     byline: d.byline,
-    status: d.status,
+    imageSrc: d.imageSrc,
     seed: d.slug,
   };
 }

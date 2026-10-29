@@ -5,7 +5,8 @@ import { toStory } from "@/lib/content/stories";
 import type { Artist } from "@/types/demo";
 
 // Re-fetch from Supabase at most once a minute (otherwise the build-time snapshot is served forever).
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function HomePage() {
   const articles = getArticles();
@@ -31,11 +32,17 @@ export default async function HomePage() {
       city: artist.location.split(",")[0]?.trim() ?? artist.location,
       title: release.title,
       year: release.year,
+      type: release.type,
       releaseDate: release.releaseDate,
       format: release.format,
     })),
   ).sort((a, b) => (b.releaseDate ?? "").localeCompare(a.releaseDate ?? "") || a.slug.localeCompare(b.slug));
   // Only an explicitly featured artist is a spotlight. Break ties by a stable identifier.
+  const randomReleaseIndex = releases.length > 1 ? Math.floor(Math.random() * releases.length) : 0;
+  const featuredRelease = releases[randomReleaseIndex];
+  const orderedReleases = featuredRelease
+    ? [featuredRelease, ...releases.filter((_, index) => index !== randomReleaseIndex)]
+    : releases;
   const spotlight = artists.filter(artist => artist.featured).sort((a, b) => a.slug.localeCompare(b.slug))[0];
   const scenes = countries.map(c => ({
     ...c,
@@ -44,5 +51,5 @@ export default async function HomePage() {
     ).length,
   }));
 
-  return <HomeView lead={lead} side={side} scenes={scenes} releases={releases} spotlight={spotlight} archiveUnavailable={archiveUnavailable} />;
+  return <HomeView lead={lead} side={side} scenes={scenes} releases={orderedReleases} spotlight={spotlight} archiveUnavailable={archiveUnavailable} />;
 }

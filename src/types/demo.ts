@@ -8,6 +8,7 @@ export type Release = {
   releaseDate?: string | null;
   year: number | null;
   format: string | null;
+  type: "Single" | "EP" | "Album";
   label: string | null;
   sideA: string[];
   sideB?: string[];
@@ -40,5 +41,5 @@ export type Dispatch = {
   pull: string;
   body: string[];
   mentions: string[]; // artist slugs
-  status: "draft" | "stub";
+  imageSrc: string;
 };

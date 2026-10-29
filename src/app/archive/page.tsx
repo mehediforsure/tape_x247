@@ -17,19 +17,15 @@ export default async function ArchivePage() {
         A growing index of people, releases, spaces and sources. Browse by record type.
       </p>
 
-      <div className="index-head mt-10" aria-hidden="true"><span>No.</span><span>Collection</span><span className="index-meta">Records</span><span aria-hidden="true">&#8599;</span></div>
-      <ol className="index-list">
+      <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {archiveCategories.map((c, index) => (
-          <li key={c.slug}>
-            <Link href={`/featured/${c.slug}`} className="index-row">
-              <span className="index-number">{String(index + 1).padStart(2, "0")}</span>
-              <div><h2 className="index-title">{c.title}</h2><p className="mt-2 text-sm text-muted">{c.description}</p></div>
-              <p className="index-meta">&#9679; {c.slug in counts ? `${String(counts[c.slug]).padStart(2, "0")} records` : "No records yet"}</p>
-              <span className="index-arrow" aria-hidden="true">&#8599;</span>
+          <Link key={c.slug} href={`/featured/${c.slug}`} className="group flex min-h-52 flex-col justify-between border border-rule p-5 no-underline transition-colors hover:bg-paper/[0.04] hover:no-underline">
+              <div className="flex items-start justify-between gap-4"><span className="index-number">{String(index + 1).padStart(2, "0")}</span><span className="index-arrow" aria-hidden="true">&#8599;</span></div>
+              <div className="mt-10"><h2 className="index-title">{c.title}</h2><p className="mt-2 text-sm text-muted">{c.description}</p></div>
+              <p className="index-meta mt-8">&#9679; {c.slug in counts ? `${String(counts[c.slug]).padStart(2, "0")} records` : "No records yet"}</p>
             </Link>
-          </li>
         ))}
-      </ol>
+      </div>
     </div>
   );
 }

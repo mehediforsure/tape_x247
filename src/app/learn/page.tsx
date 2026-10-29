@@ -31,6 +31,8 @@ export default function LearnPage() {
             title="Roland 50 Studio"
             src="https://roland50.studio/"
             loading="eager"
+            allow="autoplay; fullscreen; cross-origin-isolated"
+            allowFullScreen
             className="block h-[75dvh] min-h-[600px] w-full border-0"
           />
           <p className="mt-3 text-sm text-muted">

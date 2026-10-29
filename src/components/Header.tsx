@@ -48,12 +48,9 @@ className="hidden items-center gap-2.5 no-underline hover:no-underline md:flex"
           if (!event.currentTarget.contains(event.relatedTarget)) setOpen(false);
         }}>
           <div className="header-desktop-nav"><NavLinks /></div>
-          <button ref={toggle} type="button" className="header-menu-toggle max-md:h-[37.4px] max-md:w-[37.4px]"
-            aria-label={open ? "Close navigation menu" : "Open navigation menu"}
-            aria-expanded={open} aria-controls="header-dropdown"
-            onClick={() => setOpen((value) => !value)}>
-            <span aria-hidden="true" /><span aria-hidden="true" />
-          </button>
+          <Link href="/" aria-label="tape_x247 home" className="mobile-header-home no-underline hover:no-underline md:hidden">
+            <Image src="/logos-fonts/main%20logo.png" alt="" width={36} height={36} priority className="h-[35.7px] w-[35.7px] object-contain" />
+          </Link>
           <div id="header-dropdown" className="header-dropdown" data-open={open}
             inert={!open} aria-hidden={!open}>
             <div className="header-dropdown-inner" onClick={(event) => {

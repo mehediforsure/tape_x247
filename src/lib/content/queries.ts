@@ -78,6 +78,8 @@ function mapRelease(row: ReleaseRow): Release {
   const rawFormat = row.format?.trim();
   const format = rawFormat ? FORMATS[rawFormat.toLowerCase()] ?? rawFormat : null;
   const year = row.release_date ? Number(row.release_date.slice(0, 4)) : null;
+  const trackCount = sideA.length + sideB.length + extraSides.reduce((count, side) => count + side.tracks.length, 0);
+  const type = trackCount <= 1 ? "Single" : trackCount <= 4 ? "EP" : "Album";
   return {
     id: row.id,
     slug: row.slug,
@@ -85,6 +87,7 @@ function mapRelease(row: ReleaseRow): Release {
     releaseDate: row.release_date,
     year: year != null && Number.isInteger(year) && year > 0 ? year : null,
     format,
+    type,
     label: one(row.labels)?.name?.trim() || null,
     sideA,
     ...(sideB.length > 0 ? { sideB } : {}),

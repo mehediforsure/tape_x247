@@ -25,17 +25,16 @@ export default async function Article({ lead }: { lead: Dispatch }) {
 
       <header className="editorial-header space-y-4">
         <p className="kicker">
-          <span className="editorial-category">{kicker}</span>
-          {lead.filed !== "Not filed" ? ` · ${lead.filed}` : ""}{" "}
-          <span className="stamp ml-1">{lead.status}</span>
+          {kicker ? <span className="editorial-category">{kicker}</span> : null}
+          {kicker && lead.filed !== "Not filed" ? " · " : null}
+          {lead.filed !== "Not filed" ? lead.filed : null}
         </p>
         <h1 className="page-title">{lead.title}</h1>
         <p className="editorial-deck text-muted">{lead.deck}</p>
         <p className="editorial-byline">By {lead.byline}</p>
-        <p className="text-sm text-muted">Placeholder article for layout testing.</p>
       </header>
 
-      <CoverArt seed={lead.slug} label={kicker} className="mt-8 aspect-[16/7] w-full" />
+      <CoverArt seed={lead.slug} label={kicker} imageSrc={lead.imageSrc} className="mt-8 aspect-[16/7] w-full" />
 
       <div className="editorial-layout">
         <div className="prose-body editorial-body">

@@ -3,26 +3,23 @@ import CoverArt from "@/components/CoverArt";
 
 export type Story = {
   href: string;
-  kicker: string;
+  kicker?: string;
   date?: string;
   title: string;
   deck?: string;
   byline?: string;
-  status?: string;
+  imageSrc?: string;
   seed: string;
 };
 
 function Kicker({ s }: { s: Story }) {
+  if (!s.kicker && !s.date) return null;
+
   return (
     <p className="kicker">
-      <span className="editorial-category">{s.kicker}</span>
-      {s.date ? ` · ${s.date}` : ""}
-      {s.status ? (
-        <>
-          {" "}
-          <span className="stamp ml-1">{s.status}</span>
-        </>
-      ) : null}
+      {s.kicker ? <span className="editorial-category">{s.kicker}</span> : null}
+      {s.kicker && s.date ? " · " : null}
+      {s.date}
     </p>
   );
 }
@@ -52,7 +49,7 @@ export function SideStory({ s }: { s: Story }) {
         href={s.href}
         className="grid grid-cols-[6rem_1fr] gap-4 no-underline hover:no-underline"
       >
-        <CoverArt seed={s.seed} className="aspect-square w-full" />
+        <CoverArt seed={s.seed} imageSrc={s.imageSrc} className="aspect-square w-full" />
         <div className="space-y-1.5">
           <Kicker s={s} />
           <h3 className="headline-md story-title hover:underline decoration-1 underline-offset-4">
@@ -71,7 +68,7 @@ export function FeedRow({ s }: { s: Story }) {
         href={s.href}
         className="grid grid-cols-[4.5rem_1fr] gap-4 py-4 no-underline hover:no-underline sm:grid-cols-[6rem_1fr]"
       >
-        <CoverArt seed={s.seed} className="aspect-square w-full" />
+        <CoverArt seed={s.seed} imageSrc={s.imageSrc} className="aspect-square w-full" />
         <div className="space-y-1.5">
           <Kicker s={s} />
           <h3 className="headline-md story-title hover:underline decoration-1 underline-offset-4">
