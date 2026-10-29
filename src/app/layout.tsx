@@ -56,7 +56,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <head><script dangerouslySetInnerHTML={{ __html: themeScript }} /></head>
       <body>
-        <YouTubeEmbeds />
         <Background />
         <ConsentManager />
         <SubscriptionPopup />
@@ -70,4 +69,3 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     </html>
   );
 }
-import YouTubeEmbeds from "@/components/YouTubeEmbeds";

@@ -44,6 +44,9 @@
     outline: 1px solid rgb(var(--c-text));
     outline-offset: 3px;
   }
+  a, button, [role="button"], summary {
+    @apply outline-none focus-visible:ring-1 focus-visible:ring-neutral-400;
+  }
   ::selection {
     background: rgb(var(--c-text));
     color: rgb(var(--c-label-ink));
@@ -275,6 +278,8 @@ h1,h2,h3,p,a,blockquote { overflow-wrap: anywhere; }
 .index-identity > div { min-width: 0; }
 
 .index-row[href]:hover .index-title { text-decoration: underline; text-underline-offset: .2em; }
+.featured-page .index-head, .featured-page .index-row { grid-template-columns: minmax(0,1fr) minmax(0,.55fr) 1rem; }
+@media(max-width: 639px) { .featured-page .index-row { grid-template-columns: minmax(0,1fr) 1rem; } }
 .index-head { letter-spacing: -.01em; }
 .editorial-body::after { content: ""; display: block; clear: both; }
 .page-title {

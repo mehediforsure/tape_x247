@@ -44,7 +44,13 @@ try {
     assert.equal(response.status, 308);
     assert.equal(response.headers.get("location"), `/featured/artists/${slug}`);
   }
-  for (const path of ["/missing", "/featured/artists/missing", "/editorial/missing", "/discover/missing", "/featured/unknown"]) assert.equal((await fetch(origin + path)).status, 404, path);
+  for (const path of ["/missing", "/featured/artists/missing", "/editorial/missing", "/discover/missing", "/featured/unknown"]) {
+    const response = await fetch(origin + path);
+    const html = await response.text();
+    // Streaming can send headers before an async page calls notFound().
+    assert.ok(response.status === 404 || (response.status === 200 && html.includes("NEXT_HTTP_ERROR_FALLBACK;404")), `${path} signals not found`);
+    assert.ok(html.includes("Record not found."), `${path} renders the missing-record page`);
+  }
   console.log(`Passed: ${paths.length} pages, ${links.size} internal links, ${releaseLinks.size} release anchors, 1 redirect and 5 missing routes.`);
 } finally {
   server.kill();

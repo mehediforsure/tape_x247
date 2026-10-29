@@ -48,6 +48,7 @@ function queryFixture(rows) {
     abortSignal(signal) { assert.equal(signal.aborted, false); return Promise.resolve({ data: rows, error: null }); },
   };
   const queries = loadSource("src/lib/content/queries.ts", {
+    "next/cache": { unstable_cache: fn => fn },
     "@/utils/supabase/public": { createPublicClient: () => ({ from: () => builder }) },
   });
   return { queries, calls };
@@ -246,4 +247,43 @@ test("error retry requests fresh server content and resets the boundary", () => 
   assert.equal(button.type, "button");
   button.props.onClick();
   assert.deepEqual(calls, ["refresh", "reset"]);
+});
+
+
+test("video cards survive rerenders, remounts and consent changes without DOM replacement", () => {
+  let consent = true;
+  let states = [];
+  let cursor = 0;
+  const { default: Videos } = loadSource("src/components/YouTubeEmbeds.tsx", {
+    "@/components/useMediaConsent": { useMediaConsent: () => consent },
+    react: { useState(initial) {
+      const slot = cursor++;
+      if (!(slot in states)) states[slot] = initial;
+      return [states[slot], value => { states[slot] = value; }];
+    } },
+  });
+  const cards = Videos({}).props.children;
+  assert.equal(cards.length, 4);
+  assert.equal(Videos({ expanded: true }).props.children.length, 6);
+  const card = cards[0];
+  const render = () => { cursor = 0; return card.type(card.props); };
+  const media = tree => tree.props.children[0].props.children;
+  let tree = render();
+  assert.equal(media(tree).type, "button");
+  media(tree).props.onClick();
+  tree = render();
+  assert.equal(media(tree).type, "iframe");
+  assert.match(media(tree).props.src, /r_niEkkh30E.*start=945/);
+  assert.match(media(render()).props.src, /youtube-nocookie/);
+  consent = false;
+  tree = render();
+  assert.equal(media(tree).type, "button");
+  assert.match(media(tree).props["aria-label"], /Enable media/);
+  assert.doesNotMatch(renderToStaticMarkup(tree), /<iframe|<img/);
+  states = [];
+  consent = true;
+  tree = render();
+  assert.equal(media(tree).type, "button");
+  media(tree).props.onClick();
+  assert.equal(media(render()).type, "iframe");
 });

@@ -1,5 +1,6 @@
 import { dispatches } from "@/content/demo";
 import { cache } from "react";
+import { unstable_cache } from "next/cache";
 import { createPublicClient } from "@/utils/supabase/public";
 import type { Artist, Release } from "@/types/demo";
 
@@ -138,7 +139,9 @@ function mapArtist(row: ArtistRow): Artist {
 
 const artistSelect = "*,cities(name),countries(name),release_artists(releases(*,labels(name),tracks(*),links(*)))";
 
-const getPublishedArtistRows = cache(async () => {
+// Only public, published archive data is shared between requests. Failed reads
+// throw so a temporary outage does not replace the last successful snapshot.
+const getPublishedArtistRows = cache(unstable_cache(async () => {
   const supabase = createPublicClient();
   const { data, error } = await supabase
     .from("artists")
@@ -150,7 +153,7 @@ const getPublishedArtistRows = cache(async () => {
     .abortSignal(AbortSignal.timeout(8000));
   if (error) throw new Error(`Unable to read published artists: ${error.message}`);
   return ((data ?? []) as ArtistRow[]).map(mapArtist);
-});
+}, ["published-artists-v1"], { revalidate: 60, tags: ["public-archive"] }));
 
 export const getArtists = async () => getPublishedArtistRows();
 export const getArtist = async (slug: string) => (await getPublishedArtistRows()).find((artist) => artist.slug === slug);

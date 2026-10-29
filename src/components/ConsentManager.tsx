@@ -22,6 +22,16 @@ export default function ConsentManager() {
   const [media, setMedia] = useState(false);
 
   useEffect(() => {
+    const openPreferences = () => {
+      setMedia(readConsent()?.media === true);
+      setPreferences(true);
+      setVisible(true);
+    };
+    window.addEventListener("tape:open-media-preferences", openPreferences);
+    return () => window.removeEventListener("tape:open-media-preferences", openPreferences);
+  }, []);
+
+  useEffect(() => {
     const existing = readConsent();
     if (existing) {
       setMedia(existing.media);

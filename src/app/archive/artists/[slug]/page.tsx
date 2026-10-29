@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import ArrowUpRight from "@/components/ArrowUpRight";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -13,6 +14,12 @@ export const revalidate = 60;
 
 export async function generateStaticParams() {
   return (await getArtists()).map((a) => ({ slug: a.slug }));
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const artist = await getArtist((await params).slug);
+  if (!artist) return { title: "tape_x247" };
+  return { title: `${artist.name} | tape_x247`, ...(artist.summary ? { description: artist.summary } : {}) };
 }
 
 export default async function ArtistPage({
@@ -36,7 +43,7 @@ export default async function ArtistPage({
       <Link href="/featured/artists" className="kicker">← Artists</Link>
 
       <section className="mt-6 grid gap-10 md:grid-cols-[5fr_7fr] md:gap-12">
-        <CoverArt seed={artist.slug} label={artist.code} imageSrc={artist.imageUrl} className="aspect-square w-full" />
+        <CoverArt seed={artist.slug} label={artist.code} imageSrc={artist.imageUrl} sizes="(max-width: 767px) calc(100vw - 40px), (max-width: 979px) 42vw, 372px" className="aspect-square w-full" />
         <div>
           <p className="kicker">{artist.code && <><b>{artist.code}</b> · </>}Artist</p>
           <h1 className="page-title mt-2">{artist.name}</h1>
@@ -78,7 +85,7 @@ export default async function ArtistPage({
               key={r.id ?? r.slug ?? r.title}
               className="grid scroll-mt-28 gap-6 border-t border-rule py-8 md:grid-cols-[12rem_1fr] md:gap-8"
             >
-              <CoverArt seed={`${artist.slug}-${r.title}`} label={r.title} imageSrc={r.coverUrl} className="aspect-square w-full" />
+              <CoverArt seed={`${artist.slug}-${r.title}`} label={r.title} imageSrc={r.coverUrl} sizes="(max-width: 767px) calc(100vw - 40px), 192px" className="aspect-square w-full" />
               <div>
                 <p className="kicker">{[r.year, r.format, r.label].filter(Boolean).join(" · ") || "Release details not documented"}</p>
                 <h3 className="font-display mt-1 text-2xl font-bold tracking-tight">{r.title}</h3>
