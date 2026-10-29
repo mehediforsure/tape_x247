@@ -32,7 +32,7 @@ function loadSource(file, overrides = {}, errors = []) {
       return require(name);
     }
     vm.runInNewContext(`(function(require, module, exports) { ${outputText}\n})`, {
-      console: { ...console, error: (...args) => errors.push(args) }, AbortSignal,
+      console: { ...console, error: (...args) => errors.push(args) }, AbortSignal, URL,
     }, { filename })(localRequire, module, module.exports);
     return module.exports;
   }
@@ -89,6 +89,7 @@ test("undocumented metadata stays unknown and nonstandard formats are preserved"
   assert.equal(unknown.year, null);
   assert.equal(unknown.format, null);
   assert.equal(unknown.label, null);
+  assert.equal(unknown.type, null);
   assert.equal(mapped.releases.find(r => r.slug === "other").format, "MiniDisc");
 });
 
@@ -130,6 +131,75 @@ test("homepage releases sort across artists by full date, with undated releases 
   assert.equal((await noFeatured.default()).props.spotlight, undefined);
 });
 
+test("release catalog preserves uncredited releases and combines published artist credits", () => {
+  const { buildReleaseCatalog, releaseAnchor, releaseHref } = loadSource("src/lib/content/catalog.ts");
+  const records = [
+    { slug: "unknown", title: "Undated", release_date: null, format: null, cover_url: null, labels: null },
+    { slug: "shared", title: "Shared", release_date: "2026-10-01", format: "digital", cover_url: null, labels: [{ name: "Label" }] },
+  ];
+  const catalog = buildReleaseCatalog(records, [
+    { slug: "b", name: "B", releases: [{ slug: "shared", title: "Shared" }] },
+    { slug: "a", name: "A", releases: [{ slug: "shared", title: "Shared" }] },
+  ]);
+  assert.deepEqual(Array.from(catalog, record => record.slug), ["shared", "unknown"]);
+  assert.deepEqual(Array.from(catalog[0].artists, credit => credit.name), ["A", "B"]);
+  assert.equal(catalog[0].label, "Label");
+  assert.equal(catalog[1].artists.length, 0);
+  const unusual = { title: "A title / with spaces" };
+  assert.equal(decodeURIComponent(releaseHref("a", unusual).split("#")[1]), releaseAnchor(unusual));
+});
+
+test("release links accept web URLs and reject executable or malformed URLs", async () => {
+  const { queries } = queryFixture([{ ...artist, source_note: "Documented source", release_artists: [{ releases: {
+    ...release, links: [
+      { platform: "bandcamp", url: "https://example.com/album" },
+      { url: "javascript:alert(1)" }, { url: "data:text/html,test" },
+      { url: "not a URL" }, null,
+    ],
+  } }] }]);
+  const [mapped] = await queries.getArtists();
+  assert.equal(mapped.sourceNote, "Documented source");
+  assert.equal(mapped.releases[0].links.length, 1);
+  assert.equal(mapped.releases[0].links[0].url, "https://example.com/album");
+});
+
+test("catalog browsing combines filters, reports no matches, and clears all selections", () => {
+  const releases = [
+    { slug: "one", title: "First Record", release_date: "2026-10-01", format: "digital", label: null, cover_url: null, artists: [{ name: "Alpha", slug: "alpha", href: "/featured/artists/alpha#release-one" }] },
+    { slug: "two", title: "Second Record", release_date: "2025-01-01", format: "cassette", label: null, cover_url: null, artists: [] },
+  ];
+  function browserWithState(state) {
+    let index = 0;
+    const updates = [];
+    const browser = loadSource("src/components/CatalogBrowser.tsx", {
+      react: { ...require("react"), useState: () => {
+        const slot = index++;
+        return [state[slot], value => updates.push([slot, value])];
+      } },
+    });
+    return { browser: browser.default, updates };
+  }
+  const matching = browserWithState(["alpha", "", "2026", "digital"]);
+  const element = matching.browser({ releases, kind: "releases" });
+  const html = renderToStaticMarkup(element);
+  assert.ok(html.includes("First Record"));
+  assert.ok(!html.includes("Second Record"));
+  assert.ok(html.includes("1 of 2 records"));
+  element.props.children[1].props.children[1].props.onClick();
+  assert.deepEqual(matching.updates, [[0, ""], [1, ""], [2, ""], [3, ""]]);
+  const missing = browserWithState(["alpha", "", "2025", "digital"]);
+  assert.ok(renderToStaticMarkup(missing.browser({ releases, kind: "releases" })).includes("No records match your filters"));
+  const artists = [
+    { ...artist, slug: "a", name: "Alpha", location: "Dhaka", country: "Bangladesh", tags: [], summary: "" },
+    { ...artist, slug: "b", name: "Beta", location: "Delhi", country: "India", tags: [], summary: "" },
+  ];
+  const country = browserWithState(["", "Bangladesh", "", ""]);
+  const artistHtml = renderToStaticMarkup(country.browser({ artists, kind: "artists" }));
+  assert.ok(artistHtml.includes("Alpha"));
+  assert.ok(!artistHtml.includes("Beta"));
+  assert.ok(artistHtml.includes("1 of 2 records"));
+});
+
 test("homepage outage keeps local stories and hides unavailable counts", async () => {
   const { queries } = queryFixture([]);
   const errors = [];
@@ -138,7 +208,8 @@ test("homepage outage keeps local stories and hides unavailable counts", async (
   } }, errors);
   const html = renderToStaticMarkup(await page.default());
   assert.ok(html.includes("Archive records are temporarily unavailable"));
-  assert.ok(html.includes("rooftop tape swap"));
+  const stories = queries.getArticles();
+  for (const story of stories) assert.ok(html.includes(`/editorial/${story.slug}`));
   assert.ok(!html.includes("No published releases yet"));
   assert.ok(!html.includes("00 records"));
   assert.equal(errors.length, 1);
@@ -156,7 +227,10 @@ test("article bodies survive outages, and stories without mentions skip the quer
   assert.equal(calls, 0);
   const html = renderToStaticMarkup(await article.default({ lead: dispatches[0] }));
   assert.equal(calls, 1);
-  assert.ok(html.includes("The stairwell smelled"));
+  for (const paragraph of dispatches[0].body) {
+    const expected = renderToStaticMarkup(require("react").createElement("p", null, paragraph));
+    assert.ok(html.includes(expected), "Article paragraphs remain available during an archive outage");
+  }
   assert.ok(html.includes("Related artist records are temporarily unavailable"));
   assert.equal(errors.length, 1);
 });

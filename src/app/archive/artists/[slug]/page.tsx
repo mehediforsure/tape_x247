@@ -5,6 +5,7 @@ import Tracklist from "@/components/Tracklist";
 import { getArtists, getArtist, getArtistArticles } from "@/lib/content/queries";
 import { toStory } from "@/lib/content/stories";
 import { FeedRow } from "@/components/Stories";
+import { releaseAnchor } from "@/lib/content/catalog";
 
 // Re-fetch from Supabase at most once a minute.
 export const revalidate = 60;
@@ -26,7 +27,7 @@ export default async function ArtistPage({
   const facts: [string, string][] = [
     ["Based in", artist.location],
     ["Active", artist.active ?? "Years not documented"],
-    ["Provenance", `${artist.provenance}: replace before publishing`],
+    ["Verification", "Not independently verified"],
   ];
 
   return (
@@ -59,8 +60,10 @@ export default async function ArtistPage({
 
       <section className="mt-12 max-w-prose">
         <h2 className="kicker mb-3">Bio</h2>
-        <p className="prose-body">{artist.bio}</p>
+        <p className="prose-body whitespace-pre-line">{artist.bio || "A biography has not been documented yet."}</p>
       </section>
+
+      {artist.sourceNote ? <section className="mt-8 max-w-prose"><h2 className="kicker mb-3">Source notes</h2><p className="prose-body whitespace-pre-line">{artist.sourceNote}</p></section> : null}
 
       <section className="mt-14">
         <h2 className="headline-md mb-4">Discography</h2>
@@ -70,13 +73,15 @@ export default async function ArtistPage({
         <div className="border-b border-rule">
           {artist.releases.map((r) => (
             <article
+              id={releaseAnchor(r)}
               key={r.id ?? r.slug ?? r.title}
-              className="grid gap-6 border-t border-rule py-8 md:grid-cols-[12rem_1fr] md:gap-8"
+              className="grid scroll-mt-28 gap-6 border-t border-rule py-8 md:grid-cols-[12rem_1fr] md:gap-8"
             >
               <CoverArt seed={`${artist.slug}-${r.title}`} label={r.title} imageSrc={r.coverUrl} className="aspect-square w-full" />
               <div>
                 <p className="kicker">{[r.year, r.format, r.label].filter(Boolean).join(" · ") || "Release details not documented"}</p>
                 <h3 className="font-display mt-1 text-2xl font-bold tracking-tight">{r.title}</h3>
+                {r.links?.length ? <ul className="mt-4 flex flex-wrap gap-4">{r.links.map((link, index) => <li key={`${link.url}-${index}`}><a href={link.url} target="_blank" rel="noopener noreferrer" className="inline-block py-2 text-sm capitalize">Open on {link.label} ↗<span className="sr-only"> (opens in a new tab)</span></a></li>)}</ul> : null}
                 <div className="mt-5 grid gap-6 sm:grid-cols-2">
                   <Tracklist
                     heading={r.sideB || r.extraSides?.length || r.format === "Cassette" || r.format === "Vinyl" ? "Side A" : "Tracks"}

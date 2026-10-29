@@ -8,7 +8,6 @@ const key = "tape-theme-v1";
 export default function ThemeToggle() {
   const [theme, setTheme] = useState<Theme | null>(null);
   useEffect(() => {
-    const media = window.matchMedia("(prefers-color-scheme: light)");
     const apply = (value: Theme) => {
       document.documentElement.dataset.theme = value;
       setTheme(value);
@@ -16,13 +15,14 @@ export default function ThemeToggle() {
     const sync = () => {
       let stored: string | null = null;
       try { stored = localStorage.getItem(key); } catch {}
-      apply(stored === "light" || stored === "dark" ? stored : media.matches ? "light" : "dark");
+      apply(stored === "light" || stored === "dark" ? stored : "dark");
     };
     sync();
-    media.addEventListener("change", sync);
+    const onThemeChange = () => setTheme(document.documentElement.dataset.theme === "light" ? "light" : "dark");
+    window.addEventListener("tape:theme-change", onThemeChange);
     window.addEventListener("storage", sync);
     return () => {
-      media.removeEventListener("change", sync);
+      window.removeEventListener("tape:theme-change", onThemeChange);
       window.removeEventListener("storage", sync);
     };
   }, []);
@@ -40,6 +40,7 @@ export default function ThemeToggle() {
         document.documentElement.dataset.theme = value;
         setTheme(value);
         try { localStorage.setItem(key, value); } catch {}
+        window.dispatchEvent(new Event("tape:theme-change"));
       }}
     >
       <span className="theme-switch-track" aria-hidden="true">

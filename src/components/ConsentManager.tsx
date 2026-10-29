@@ -17,28 +17,23 @@ function readConsent(): Consent | null {
 }
 
 export default function ConsentManager() {
-  const [consent, setConsent] = useState<Consent | null>(null);
   const [visible, setVisible] = useState(false);
   const [preferences, setPreferences] = useState(false);
   const [media, setMedia] = useState(false);
 
   useEffect(() => {
-    const openSettings = () => { setVisible(true); setPreferences(true); };
-    window.addEventListener("tape:open-consent", openSettings);
     const existing = readConsent();
     if (existing) {
-      setConsent(existing);
       setMedia(existing.media);
       window.dispatchEvent(new CustomEvent(MEDIA_EVENT, { detail: existing.media }));
-      return () => window.removeEventListener("tape:open-consent", openSettings);
+      return;
     }
     const timer = window.setTimeout(() => setVisible(true), 1000);
-    return () => { window.clearTimeout(timer); window.removeEventListener("tape:open-consent", openSettings); };
+    return () => window.clearTimeout(timer);
   }, []);
 
   const save = (next: Consent) => {
     try { localStorage.setItem(CONSENT_KEY, JSON.stringify(next)); } catch {}
-    setConsent(next);
     setVisible(false);
     setPreferences(false);
     window.dispatchEvent(new CustomEvent(MEDIA_EVENT, { detail: next.media }));
@@ -49,7 +44,6 @@ export default function ConsentManager() {
     save({ media });
   };
 
-  if (!visible && consent) return <button className="consent-settings" type="button" onClick={() => { setVisible(true); setPreferences(true); }}>Cookie settings</button>;
   if (!visible) return null;
 
   return (

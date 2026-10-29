@@ -7,7 +7,7 @@ import CoverArt from "@/components/CoverArt";
 import type { Story } from "@/components/Stories";
 
 export type Scene = { name: string; slug: string; count?: number };
-export type ReleaseCard = { slug: string; artistSlug: string; coverUrl?: string; artist: string; city: string; title: string; year: number | null; type: "Single" | "EP" | "Album"; format: string | null };
+export type ReleaseCard = { slug: string; artistSlug: string; href: string; coverUrl?: string; artist: string; city: string; title: string; year: number | null; type: "Single" | "EP" | "Album" | null; format: string | null };
 export type ArtistSpotlight = { slug: string; name: string; location: string; imageUrl?: string; summary: string };
 
 const homepageVideos = [
@@ -50,16 +50,17 @@ function StoryRow({ story, imageSrc }: { story: Story; imageSrc?: string }) {
   );
 }
 
-export default function HomeView({ lead, side, scenes, releases, spotlight, archiveUnavailable = false }: {
+export default function HomeView({ lead, side, scenes, releases, initialReleaseIndex = 0, spotlight, archiveUnavailable = false }: {
   lead?: Story;
   side: Story[];
   scenes: Scene[];
   releases: ReleaseCard[];
+  initialReleaseIndex?: number;
   spotlight?: ArtistSpotlight;
   archiveUnavailable?: boolean;
 }) {
   const stories = lead ? [lead, ...side] : side;
-  const [featuredReleaseIndex, setFeaturedReleaseIndex] = useState(0);
+  const [featuredReleaseIndex, setFeaturedReleaseIndex] = useState(initialReleaseIndex);
   const [isChangingRelease, setIsChangingRelease] = useState(false);
   const [mediaConsent, setMediaConsent] = useState(false);
   const featuredRelease = releases[featuredReleaseIndex];
@@ -97,7 +98,7 @@ export default function HomeView({ lead, side, scenes, releases, spotlight, arch
 {featuredRelease ? <section aria-labelledby="start-here" className={`home-featured-release grid grid-cols-2 gap-4 text-left transition-opacity duration-500 motion-reduce:transition-none lg:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.65fr)] lg:gap-8 lg:text-left ${isChangingRelease ? "opacity-0" : "opacity-100"}`}>
 <div className="order-2 w-full max-lg:col-start-2 max-lg:row-start-1 lg:order-1">
 <p className="mx-0 w-full text-left font-normal text-base uppercase tracking-[0.08em] max-lg:justify-self-start lg:mx-0 lg:font-semibold lg:text-lg">START HERE</p>
-          <Link href={`/featured/artists/${featuredRelease.artistSlug}`} aria-label={`View ${featuredRelease.title} release in the artist discography`} className="mx-auto block w-[85%] lg:mx-0">
+          <Link href={featuredRelease.href} aria-label={`View ${featuredRelease.title} release in the artist discography`} className="mx-auto block w-[85%] lg:mx-0">
 <CoverArt seed={featuredRelease.slug} imageSrc={featuredRelease.coverUrl} eager className="mt-8 aspect-[4/3] w-full" />
           </Link>
         </div>
@@ -105,14 +106,14 @@ export default function HomeView({ lead, side, scenes, releases, spotlight, arch
 <p className="kicker max-lg:col-start-1 max-lg:row-start-2">{[featuredRelease.type, featuredRelease.year].filter(Boolean).join(" · ")}</p>
 <h1 id="start-here" className="headline-xl mt-3 max-md:text-xl max-lg:col-start-1 max-lg:row-start-1">{featuredRelease.title}</h1>
 <p className="mt-4 max-w-prose text-lg text-muted max-md:text-sm max-lg:col-start-1 max-lg:row-start-3 lg:mx-0 lg:mr-auto"><span className="featured-artist-name">{featuredRelease.artist}</span><span className="featured-artist-divider"> · </span><span className="featured-artist-location">{featuredRelease.city}</span></p>
-<Link href="/featured/artists" className="btn mx-0 mt-6 w-fit max-lg:col-span-2 max-lg:row-start-4 lg:mx-0">Explore more artists →</Link>
+<Link href="/featured/artists" className="btn mx-0 mt-6 min-h-12 w-fit px-6 py-3 text-base font-bold max-lg:col-span-2 max-lg:row-start-4 lg:mx-0">Explore more artists →</Link>
         </div>
       </section> : <section><h1 className="headline-xl">A zine. A living archive.</h1><p className="mt-4 text-muted">{archiveUnavailable ? "Archive records are temporarily unavailable. Explore the stories below and try again shortly." : "No published releases yet. Explore the stories and scenes below."}</p></section>}
 
       <section aria-labelledby="new-on-tape" className="mt-24 sm:mt-32">
-        <div className="mb-6 flex items-baseline justify-between gap-4"><h2 id="new-on-tape" className="headline-md">New on tape_x247</h2><Link href="/featured/releases" className="kicker no-underline hover:underline">See all →</Link></div>
+        <div className="mb-6 flex items-baseline justify-between gap-4"><h2 id="new-on-tape" className="headline-md">Latest releases</h2><Link href="/featured/releases" className="kicker no-underline hover:underline">See all →</Link></div>
         <div className="index-head" aria-hidden="true"><span>No.</span><span>Release / Artist</span><span className="index-meta">Format / Year</span><span aria-hidden="true">&#8599;</span></div>
-        <ol className="index-list">{releases.slice(0, 5).map((release, index) => <li key={release.slug}><Link href={`/featured/artists/${release.artistSlug}`} className="index-row"><span className="index-number">{String(index + 1).padStart(2, "0")}</span><div className="index-identity"><CoverArt seed={release.slug} imageSrc={release.coverUrl} className="aspect-square" /><div><h3 className="index-title">{release.title}</h3><p className="index-meta mt-2">{release.artist} / {release.city}</p></div></div><p className="index-meta">{[release.format, release.year].filter(Boolean).join(" / ") || "Not documented"}</p><span className="index-arrow" aria-hidden="true">&#8599;</span></Link></li>)}</ol>
+        <ol className="index-list">{releases.slice(0, 5).map((release, index) => <li key={release.slug}><Link href={release.href} className="index-row"><span className="index-number">{String(index + 1).padStart(2, "0")}</span><div className="index-identity"><CoverArt seed={release.slug} imageSrc={release.coverUrl} className="aspect-square" /><div><h3 className="index-title">{release.title}</h3><p className="index-meta mt-2">{release.artist} / {release.city}</p></div></div><p className="index-meta">{[release.format, release.year].filter(Boolean).join(" / ") || "Not documented"}</p><span className="index-arrow" aria-hidden="true">&#8599;</span></Link></li>)}</ol>
       </section>
 
       {spotlight ? <section aria-labelledby="artist-spotlight" className="mt-24 border-t border-rule pt-10 sm:mt-32 sm:pt-12">

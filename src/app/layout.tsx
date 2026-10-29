@@ -35,7 +35,7 @@ const editorial = Newsreader({ adjustFontFallback: false, subsets: ["latin"], st
 const bengaliSans = Noto_Sans_Bengali({ subsets: ["bengali"], variable: "--font-bn-sans", display: "swap" });
 const bengaliSerif = Noto_Serif_Bengali({ subsets: ["bengali"], variable: "--font-bn-serif", display: "swap" });
 
-const themeScript = `(function(){var t;try{t=localStorage.getItem('tape-theme-v1')}catch(e){}document.documentElement.dataset.theme=t==='light'||t==='dark'?t:matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'})()`;
+const themeScript = `(function(){var t;try{t=localStorage.getItem('tape-theme-v1')}catch(e){}document.documentElement.dataset.theme=t==='light'||t==='dark'?t:'dark'})()`;
 
 export const metadata: Metadata = {
   title: "tape_x247",
@@ -50,6 +50,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
+      data-theme="dark"
       suppressHydrationWarning
       className={`${display.variable} ${body.variable} ${mono.variable} ${stamp.variable} ${ui.variable} ${editorial.variable} ${bengaliSans.variable} ${bengaliSerif.variable}`}
     >

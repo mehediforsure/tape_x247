@@ -78,8 +78,8 @@ function mapRelease(row: ReleaseRow): Release {
   const rawFormat = row.format?.trim();
   const format = rawFormat ? FORMATS[rawFormat.toLowerCase()] ?? rawFormat : null;
   const year = row.release_date ? Number(row.release_date.slice(0, 4)) : null;
-  const trackCount = sideA.length + sideB.length + extraSides.reduce((count, side) => count + side.tracks.length, 0);
-  const type = trackCount <= 1 ? "Single" : trackCount <= 4 ? "EP" : "Album";
+  // Track count alone cannot establish whether a release is a single, EP or album.
+  const type = null;
   return {
     id: row.id,
     slug: row.slug,
@@ -88,6 +88,16 @@ function mapRelease(row: ReleaseRow): Release {
     year: year != null && Number.isInteger(year) && year > 0 ? year : null,
     format,
     type,
+    links: (row.links ?? []).flatMap(value => {
+      if (!value || typeof value !== "object") return [];
+      const link = value as { url?: unknown; platform?: unknown };
+      if (typeof link.url !== "string") return [];
+      try {
+        const url = new URL(link.url);
+        if (url.protocol !== "https:" && url.protocol !== "http:") return [];
+        return [{ url: url.href, label: typeof link.platform === "string" && link.platform.trim() ? link.platform.trim() : url.hostname }];
+      } catch { return []; }
+    }),
     label: one(row.labels)?.name?.trim() || null,
     sideA,
     ...(sideB.length > 0 ? { sideB } : {}),
@@ -120,6 +130,7 @@ function mapArtist(row: ArtistRow): Artist {
     // Publishing is an editorial decision, not evidence. The database has no verification field yet,
     // so every record stays "claimed" until one exists.
     provenance: "claimed",
+    sourceNote: row.source_note?.trim() || undefined,
     imageUrl: row.image_url ?? undefined,
     releases,
   };

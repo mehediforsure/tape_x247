@@ -3,6 +3,7 @@ import { countries } from "@/content/taxonomy";
 import { getArticles, getArtists } from "@/lib/content/queries";
 import { toStory } from "@/lib/content/stories";
 import type { Artist } from "@/types/demo";
+import { releaseHref, selectSpotlight } from "@/lib/content/catalog";
 
 // Keep the homepage fast for returning visitors while refreshing archive data regularly.
 export const revalidate = 60;
@@ -27,6 +28,7 @@ export default async function HomePage() {
       slug: `${artist.slug}-${release.slug ?? release.id ?? release.title}`,
       artist: artist.name,
       artistSlug: artist.slug,
+      href: releaseHref(artist.slug, release),
       coverUrl: release.coverUrl,
       city: artist.location.split(",")[0]?.trim() ?? artist.location,
       title: release.title,
@@ -38,11 +40,7 @@ export default async function HomePage() {
   ).sort((a, b) => (b.releaseDate ?? "").localeCompare(a.releaseDate ?? "") || a.slug.localeCompare(b.slug));
   // Only an explicitly featured artist is a spotlight. Break ties by a stable identifier.
   const randomReleaseIndex = releases.length > 1 ? Math.floor(Math.random() * releases.length) : 0;
-  const featuredRelease = releases[randomReleaseIndex];
-  const orderedReleases = featuredRelease
-    ? [featuredRelease, ...releases.filter((_, index) => index !== randomReleaseIndex)]
-    : releases;
-  const spotlight = artists.filter(artist => artist.featured).sort((a, b) => a.slug.localeCompare(b.slug))[0];
+  const spotlight = selectSpotlight(artists);
   const scenes = countries.map(c => ({
     ...c,
     count: archiveUnavailable ? undefined : artists.filter(artist =>
@@ -50,5 +48,5 @@ export default async function HomePage() {
     ).length,
   }));
 
-  return <HomeView lead={lead} side={side} scenes={scenes} releases={orderedReleases} spotlight={spotlight} archiveUnavailable={archiveUnavailable} />;
+  return <HomeView lead={lead} side={side} scenes={scenes} releases={releases} initialReleaseIndex={randomReleaseIndex} spotlight={spotlight} archiveUnavailable={archiveUnavailable} />;
 }

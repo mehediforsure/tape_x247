@@ -10,12 +10,13 @@ export default function Tracklist({
   return (
     <div>
       <h4 className="kicker mb-2">{heading}</h4>
-      <div className="index-head" aria-hidden="true"><span>No.</span><span>Track</span><span className="index-meta">Audio</span><span aria-hidden="true">&#8599;</span></div>
+      {tracks.length === 0 ? <p className="text-sm text-muted">Tracklist not documented.</p> : null}
+      {tracks.length > 0 ? <div className="mb-2 grid grid-cols-[2rem_minmax(0,1fr)] gap-4 text-xs text-muted" aria-hidden="true"><span>No.</span><span>Track</span></div> : null}
       <ol className="index-list">
         {tracks.map((t, i) => (
-          <li key={`${i}-${t}`} className="index-row">
+          <li key={`${i}-${t}`} className="grid grid-cols-[2rem_minmax(0,1fr)] gap-4 border-t border-rule py-3">
             <span className="index-number">{String(start + i).padStart(2, "0")}</span>
-            <span className="index-title">{t}</span><span className="index-meta" aria-hidden="true">&#9679;</span><span className="index-arrow" aria-hidden="true">&#8599;</span>
+            <span className="text-sm">{t}</span>
           </li>
         ))}
       </ol>

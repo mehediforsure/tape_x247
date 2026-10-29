@@ -8,7 +8,8 @@ export type Release = {
   releaseDate?: string | null;
   year: number | null;
   format: string | null;
-  type: "Single" | "EP" | "Album";
+  type: "Single" | "EP" | "Album" | null;
+  links?: { label: string; url: string }[];
   label: string | null;
   sideA: string[];
   sideB?: string[];
@@ -28,6 +29,7 @@ export type Artist = {
   summary: string;
   bio: string;
   provenance: Provenance;
+  sourceNote?: string;
   imageUrl?: string;
   releases: Release[];
 };
