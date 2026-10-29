@@ -16,6 +16,7 @@ export const artists: Artist[] = [
       {
         title: "Rain on Tin",
         year: 2022,
+        type: "EP",
         format: "Cassette",
         label: "Placeholder Tapes",
         sideA: ["Monsoon Intro", "Tin Roof", "Tea Stall Loop"],
@@ -24,6 +25,7 @@ export const artists: Artist[] = [
       {
         title: "Slow Signal",
         year: 2024,
+        type: "EP",
         format: "Digital",
         label: "Self-released",
         sideA: ["Carrier", "Dial Drift", "Repeater"],
